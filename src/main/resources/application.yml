@@ -1,0 +1,24 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+        registration:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: ibdb
+    password: ibdb
+    url: jdbc:sqlserver://localhost;database=ibdb
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        use_nationalized_character_data: true
+        jdbc:
+          time_zone: UTC
+    database: sql_server
+
+ibdb:
+  task:
+    token-cleanup-frequency: 15
