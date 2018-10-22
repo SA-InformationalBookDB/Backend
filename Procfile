@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -Dspring.profiles.active=postgresql $JAVA_OPTS -jar target/*.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=postgresql,swagger $JAVA_OPTS -jar target/*.jar

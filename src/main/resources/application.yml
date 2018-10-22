@@ -21,7 +21,7 @@ spring:
 
 ibdb:
   security:
-    non-filtered-prefixes: /oauth, /swagger, /webjars, /v2/api-docs
+    non-filtered-prefixes: /oauth, /swagger, /webjars
     oauth2:
       access-token-expiration-in: 5
       access-token-length: 64
