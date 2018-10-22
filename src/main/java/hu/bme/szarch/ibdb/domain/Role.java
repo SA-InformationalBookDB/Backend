@@ -1,5 +1,5 @@
 package hu.bme.szarch.ibdb.domain;
 
-public enum Roles {
+public enum Role {
     ADMIN, USER
 }

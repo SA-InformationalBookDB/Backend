@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Entity
+@Entity(name = "IbdbUser")
 @Getter
 @Setter
 public class User {
@@ -34,6 +34,6 @@ public class User {
     private List<Review> reviews;
 
     @Enumerated(EnumType.STRING)
-    private Roles role;
+    private Role role;
 
 }

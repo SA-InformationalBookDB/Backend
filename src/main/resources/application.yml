@@ -2,8 +2,13 @@ spring:
   security:
     oauth2:
       client:
-        provider:
         registration:
+          facebook:
+            client-id: <facebook-id>
+            client-secret: <facebook-secret>
+          google:
+            client-id: <google-id>
+            client-secret: <google-secret>
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: ibdb
@@ -20,5 +25,12 @@ spring:
     database: sql_server
 
 ibdb:
+  security:
+    non-filtered-prefixes: /oauth, /swagger, /webjars
+    oauth2:
+      access-token-expiration-in: 5
+      access-token-length: 64
+      refresh-token-length: 64
+      authorization-code-length: 32
   task:
     token-cleanup-frequency: 15

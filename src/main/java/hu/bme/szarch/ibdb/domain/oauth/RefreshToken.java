@@ -1,23 +1,25 @@
 package hu.bme.szarch.ibdb.domain.oauth;
 
-import lombok.*;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Entity
-public class RefreshToken implements OAuth2RefreshToken {
+public class RefreshToken {
 
     @Id
     private String value;
 
-    @Override
-    public String getValue() {
-        return value;
-    }
+    @OneToOne
+    private AccessToken accessToken;
+
 }

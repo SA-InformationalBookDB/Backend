@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     @GetMapping("/popular")
-    public Page<BookResponse> getPopularBooks(@RequestAttribute int page, @RequestAttribute int size) {
+    public Page<BookResponse> getPopularBooks(@RequestParam int page, @RequestParam int size) {
         return Page.empty();
     }
 
     @GetMapping("/bestseller")
-    public Page<BookResponse> getBestSellerBooks(@RequestAttribute int page, @RequestAttribute int size) {
+    public Page<BookResponse> getBestSellerBooks(@RequestParam int page, @RequestParam int size) {
         return Page.empty();
     }
 
     @GetMapping("/offer")
-    public Page<BookResponse> getOfferedBooks(@RequestAttribute int page, @RequestAttribute int size) {
+    public Page<BookResponse> getOfferedBooks(@RequestParam int page, @RequestParam int size) {
         return Page.empty();
     }
 
     @GetMapping("/trending")
-    public Page<BookResponse> getTrendingBooks(@RequestAttribute int page, @RequestAttribute int size) {
+    public Page<BookResponse> getTrendingBooks(@RequestParam(required = false) int page, @RequestParam(required = false) int size) {
         return Page.empty();
     }
 
@@ -35,12 +35,12 @@ public class BookController {
     }
 
     @GetMapping("/{id}/review")
-    public Page<ReviewResponse> getBookReviews(@PathVariable String id, @RequestAttribute int page, @RequestAttribute int size) {
+    public Page<ReviewResponse> getBookReviews(@PathVariable String id, @RequestParam int page, @RequestParam int size) {
         return Page.empty();
     }
 
     @GetMapping("/find")
-    public Page<BookResponse> findBooks(@RequestAttribute int page, @RequestAttribute int size, @RequestAttribute String bookName) {
+    public Page<BookResponse> findBooks(@RequestParam int page, @RequestParam int size, @RequestParam String bookName) {
         return Page.empty();
     }
 

@@ -1,4 +1,4 @@
-package hu.bme.szarch.ibdb.service.dto.oauth;
+package hu.bme.szarch.ibdb.service.dto.authorization;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,11 +7,9 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class LoginMessage {
+public class AuthorizationCodeMessage {
 
-    private String email;
-
-    private String password;
+    private String code;
 
     private String clientId;
 

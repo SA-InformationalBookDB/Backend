@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "ibdb.security.non-filtered-prefixes",
+      "type": "java.lang.String",
+      "description": "Description for ibdb.security.non-filtered-prefixes."
+    },
+    {
+      "name": "ibdb.security.oauth2.access-token-expiration-in",
+      "type": "java.lang.String",
+      "description": "Description for ibdb.security.oauth2.access-token-expiration-in."
+    },
+    {
+      "name": "ibdb.security.oauth2.access-token-length",
+      "type": "java.lang.String",
+      "description": "Description for ibdb.security.oauth2.access-token-length."
+    },
+    {
+      "name": "ibdb.security.oauth2.refresh-token-length",
+      "type": "java.lang.String",
+      "description": "Description for ibdb.security.oauth2.refresh-token-length."
+    },
+    {
+      "name": "ibdb.security.oauth2.authorization-code-length",
+      "type": "java.lang.String",
+      "description": "Description for ibdb.security.oauth2.authorization-code-length."
+    }
+  ] }

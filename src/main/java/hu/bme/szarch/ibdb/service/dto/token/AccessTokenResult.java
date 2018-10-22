@@ -1,16 +1,15 @@
-package hu.bme.szarch.ibdb.controller.dto.oauth;
+package hu.bme.szarch.ibdb.service.dto.token;
 
-
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Getter
 @Setter
-public class AccessTokenResponse {
+@Getter
+public class AccessTokenResult {
 
     private String accessToken;
     private OffsetDateTime accessTokenExpiration;

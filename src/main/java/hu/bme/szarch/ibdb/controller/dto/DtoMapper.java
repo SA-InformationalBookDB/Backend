@@ -1,13 +1,11 @@
 package hu.bme.szarch.ibdb.controller.dto;
 
-import hu.bme.szarch.ibdb.controller.dto.oauth.LoginRequest;
-import hu.bme.szarch.ibdb.controller.dto.oauth.LoginResponse;
-import hu.bme.szarch.ibdb.controller.dto.oauth.RegistrationRequest;
-import hu.bme.szarch.ibdb.controller.dto.oauth.RegistrationResponse;
-import hu.bme.szarch.ibdb.service.dto.oauth.LoginMessage;
-import hu.bme.szarch.ibdb.service.dto.oauth.LoginResult;
-import hu.bme.szarch.ibdb.service.dto.oauth.RegistrationMessage;
-import hu.bme.szarch.ibdb.service.dto.oauth.RegistrationResult;
+import hu.bme.szarch.ibdb.controller.dto.oauth.*;
+import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
+import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
+import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationMessage;
+import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationResult;
+import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
 
 public class DtoMapper {
 
@@ -37,6 +35,14 @@ public class DtoMapper {
         return LoginResponse.builder()
                 .code(result.getCode())
                 .redirectUri(result.getRedirectUri())
+                .build();
+    }
+
+    public static AccessTokenResponse resultToResponse(AccessTokenResult result) {
+        return AccessTokenResponse.builder()
+                .accessToken(result.getAccessToken())
+                .accessTokenExpiration(result.getAccessTokenExpiration())
+                .refreshToken(result.getRefreshToken())
                 .build();
     }
 

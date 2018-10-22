@@ -3,7 +3,7 @@ package hu.bme.szarch.ibdb.service;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.AuthorizationCodeRepository;
-import hu.bme.szarch.ibdb.service.dto.oauth.AuthorizationCode;
+import hu.bme.szarch.ibdb.domain.oauth.AuthorizationCode;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -18,7 +18,7 @@ public class AuthorizationCodeService extends TokenGenerator {
         this.authorizationCodeRepository = authorizationCodeRepository;
     }
 
-    public AuthorizationCode createAuthorizationCode(String userId, String clientId, String redirectUri) {
+    public String createAuthorizationCode(String userId, String clientId, String redirectUri) {
         AuthorizationCode authorizationCode = new AuthorizationCode();
 
         authorizationCode.setClientId(clientId);
@@ -29,21 +29,19 @@ public class AuthorizationCodeService extends TokenGenerator {
 
         authorizationCodeRepository.save(authorizationCode);
 
-        return authorizationCode;
+        return authorizationCode.getCode();
     }
 
     public String consumeAuthorizationCode(String code, String clientId, String redirectUri) {
-        Optional<AuthorizationCode> authorizationCode = authorizationCodeRepository.findById(code);
+        Optional<AuthorizationCode> authorizationCode = authorizationCodeRepository.findByCodeAndClientIdAndRedirectUri(code, clientId, redirectUri);
 
-        if(!authorizationCode.isPresent()) {
+        if(!authorizationCode.isPresent() || authorizationCode.get().getExpirationDate().isBefore(OffsetDateTime.now())) {
             throw new ServerException(Errors.INVALID_AUTHORIZATION_CODE);
         }
 
-        String userId = authorizationCode.get().getUserId();
-
         authorizationCodeRepository.delete(authorizationCode.get());
 
-        return userId;
+        return authorizationCode.get().getUserId();
     }
 
     public void deleteExpiredCodes() {

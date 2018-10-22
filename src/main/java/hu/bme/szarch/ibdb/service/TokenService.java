@@ -6,18 +6,26 @@ import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.AccessTokenRepository;
 import hu.bme.szarch.ibdb.repository.RefreshTokenRepository;
+import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.TokenRequest;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
-public class TokenService extends TokenGenerator implements AuthorizationServerTokenServices {
+public class TokenService extends TokenGenerator {
+
+    @Value("${ibdb.security.oauth2.access-token-expiration-in}")
+    private int accessTokenExpirationInXMinutes;
+
+    @Value("${ibdb.security.oauth2.access-token-length}")
+    private int accessTokenLength;
+
+    @Value("${ibdb.security.oauth2.refresh-token-length}")
+    private int refreshTokenLength;
 
     private AccessTokenRepository accessTokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
@@ -27,50 +35,49 @@ public class TokenService extends TokenGenerator implements AuthorizationServerT
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    @Override
-    public OAuth2AccessToken createAccessToken(OAuth2Authentication oAuth2Authentication) throws AuthenticationException {
+    @Transactional
+    public AccessTokenResult createAccessToken(String userId) throws AuthenticationException {
 
-
-        AccessToken accessToken = createNewAccessToken();
-
-        accessTokenRepository.save(accessToken);
-
-        return accessToken;
-    }
-
-    @Override
-    public OAuth2AccessToken refreshAccessToken(String s, TokenRequest tokenRequest) throws AuthenticationException {
-        Optional<AccessToken> accessToken = accessTokenRepository.findById(s);
-
-        if (!accessToken.isPresent()) {
-            throw new ServerException(Errors.INVALID_ACCESS_TOKEN);
-        }
-
-        accessTokenRepository.delete(accessToken.get());
-
-        AccessToken newAccessToken = createNewAccessToken();
-
-        accessTokenRepository.save(newAccessToken);
-
-        return newAccessToken;
-    }
-
-    @Override
-    public OAuth2AccessToken getAccessToken(OAuth2Authentication oAuth2Authentication) {
-        return new AccessToken();
-    }
-
-    private AccessToken createNewAccessToken() {
         RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setValue(generateRandomToken(16));
+        refreshToken.setValue(generateRandomToken(refreshTokenLength));
 
         AccessToken accessToken = new AccessToken();
         accessToken.setExpirationDate(OffsetDateTime.now().plusMinutes(5));
         accessToken.setRefreshToken(refreshToken);
-        accessToken.setUserId(""); // TODO: Set valid id
-        accessToken.setValue(generateRandomToken(16));
+        accessToken.setUserId(userId);
+        accessToken.setValue(generateRandomToken(accessTokenLength));
 
-        return accessToken;
+        refreshTokenRepository.save(refreshToken);
+        accessTokenRepository.save(accessToken);
+
+        return AccessTokenResult.builder()
+                .accessToken(accessToken.getValue())
+                .accessTokenExpiration(accessToken.getExpirationDate())
+                .refreshToken(refreshToken.getValue())
+                .build();
+    }
+
+    public AccessTokenResult refreshAccessToken(String rawRefreshToken) throws AuthenticationException {
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(rawRefreshToken);
+
+        if (!refreshToken.isPresent() || !refreshToken.get().getAccessToken().getExpirationDate().isBefore(OffsetDateTime.now())) {
+            throw new ServerException(Errors.INVALID_ACCESS_TOKEN);
+        }
+
+        refreshToken.get().getAccessToken().setExpirationDate(OffsetDateTime.now().plusMinutes(accessTokenExpirationInXMinutes));
+
+        refreshTokenRepository.save(refreshToken.get());
+
+        return AccessTokenResult.builder()
+                .accessToken(refreshToken.get().getAccessToken().getValue())
+                .refreshToken(refreshToken.get().getValue())
+                .accessTokenExpiration(refreshToken.get().getAccessToken().getExpirationDate())
+                .build();
+    }
+
+    public Optional<String> getUserIdByAccessToken(String rawAccessToken) {
+        Optional<AccessToken> accessToken = accessTokenRepository.findById(rawAccessToken);
+        return accessToken.map(AccessToken::getUserId);
     }
 
     public void deleteExpiredTokens() {

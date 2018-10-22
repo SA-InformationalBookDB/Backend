@@ -1,4 +1,4 @@
-package hu.bme.szarch.ibdb.service.dto.oauth;
+package hu.bme.szarch.ibdb.service.dto.authentication;
 
 import lombok.Builder;
 import lombok.Getter;
