@@ -9,11 +9,6 @@ spring:
           google:
             client-id: <google-id>
             client-secret: <google-secret>
-  datasource:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: ibdb
-    password: ibdb
-    url: jdbc:sqlserver://localhost;database=ibdb
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -34,3 +29,19 @@ ibdb:
       authorization-code-length: 32
   task:
     token-cleanup-frequency: 15
+---
+spring:
+  profiles: mssql
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: ibdb
+    password: ibdb
+    url: jdbc:sqlserver://localhost;database=ibdb
+---
+spring:
+  profiles: postgresql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dag8ngcgraul79
+    username:
+    password:
+    driver-class-name:
