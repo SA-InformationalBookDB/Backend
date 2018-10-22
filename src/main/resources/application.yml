@@ -41,7 +41,7 @@ spring:
 spring:
   profiles: postgresql
   datasource:
-    url: jdbc:postgresql://localhost:5432/dag8ngcgraul79
+    url: postgres://tkmijcunlsbsjs:7ae61cb112d9565ed09789a4ac22ea1884258baadeb90b9e70053aea9c5cfcb9@ec2-54-217-235-137.eu-west-1.compute.amazonaws.com:5432/dag8ngcgraul79
     username: tkmijcunlsbsjs
     password: 7ae61cb112d9565ed09789a4ac22ea1884258baadeb90b9e70053aea9c5cfcb9
     driver-class-name:
