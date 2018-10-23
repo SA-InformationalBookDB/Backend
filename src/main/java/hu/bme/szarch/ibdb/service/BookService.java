@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,17 +36,17 @@ public class BookService {
     }
 
     public Page<BookResult> getTrending(Pageable pageable, OffsetDateTime publishedAfter) {
-        return bookRepository.findAllByPublishedAfterAndOrderByViewsDesc(pageable, publishedAfter).map(this::bookToResult);
+        return bookRepository.findAllByPublishedAfterOrderByViewsDesc(pageable, publishedAfter).map(this::bookToResult);
     }
 
     public Page<BookResult> findOffered(OfferedBookQuery query) {
         List<Category> categories = userService.getCategoriesForUser(query.getUserId());
 
-        return bookRepository.findAllByCategoriesInAnAndPublishedAfterAndAuthorIsInAndOrderByViewDesc(
+        return bookRepository.findAllByPublishedAfterAndCategoriesContainsAndAuthorInOrderByViewsDesc(
                 query.getPageable(),
-                categories,
                 query.getPublishedAfter(),
-                query.getAuthors()
+                new HashSet<>(categories),
+                new HashSet<>(query.getAuthors())
         ).map(this::bookToResult);
     }
 
