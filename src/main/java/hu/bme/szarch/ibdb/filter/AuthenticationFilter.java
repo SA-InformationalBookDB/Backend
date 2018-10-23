@@ -1,6 +1,7 @@
 package hu.bme.szarch.ibdb.filter;
 
 import hu.bme.szarch.ibdb.domain.Role;
+import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.TokenService;
 import hu.bme.szarch.ibdb.service.UserService;
 import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
@@ -71,6 +72,8 @@ public class AuthenticationFilter extends GenericFilterBean {
         } else if(!userInfoResult.getRole().equals(Role.USER)) {
             response.sendError(401);
         }
+
+        request.setAttribute("X-IBDB-USER", new UserInfo(userId.get()));
     }
 
     private boolean isAdminEndpoint(String uri) {

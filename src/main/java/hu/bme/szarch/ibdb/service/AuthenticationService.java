@@ -69,6 +69,14 @@ public class AuthenticationService extends TokenGenerator {
                 .build();
     }
 
+    public void logout(String userId) {
+        if(userId == null) {
+            throw new ServerException(Errors.UNABLE_TO_LOUGOUT);
+        }
+
+        tokenService.deleteUserTokens(userId);
+    }
+
     public AccessTokenResult exchangeAuthorizationCode(AuthorizationCodeMessage message) {
         //TODO: check client id
 

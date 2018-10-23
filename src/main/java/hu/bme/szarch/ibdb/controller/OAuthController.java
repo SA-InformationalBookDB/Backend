@@ -4,9 +4,12 @@ import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.oauth.*;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
+import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.AuthenticationService;
 import hu.bme.szarch.ibdb.service.dto.authorization.AuthorizationCodeMessage;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -54,5 +57,27 @@ public class OAuthController {
 
         throw new ServerException(Errors.BAD_REQUEST);
     }
+
+    @PostMapping("/logout")
+    public void logout(@RequestAttribute UserInfo userInfo) {
+        authenticationService.logout(userInfo.getUserId());
+    }
+
+    @GetMapping("/authorize")
+    public RedirectView authorize(
+            @RequestParam("response_type") String responseType,
+            @RequestParam("client_id") String clientId,
+            @RequestParam(value = "redirect_uri", required = false) String redirectUri,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (responseType.equals("code") /*&& this.clientService.checkClientId(clientId)*/) {
+            redirectAttributes.addAttribute("client_id", clientId);
+            redirectAttributes.addAttribute("redirect_uri", redirectUri);
+            return new RedirectView("http://localhost/login");
+        }
+        redirectAttributes.addAttribute("error", "invalid_request");
+        return new RedirectView(redirectUri);
+    }
+
 
 }
