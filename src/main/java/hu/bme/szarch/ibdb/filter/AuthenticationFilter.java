@@ -47,7 +47,7 @@ public class AuthenticationFilter extends GenericFilterBean {
     }
 
     private boolean shouldFilter(HttpServletRequest request) {
-        return !hasNotFilteredPrefix(request.getRequestURI());
+        return !hasNonFilteredPrefix(request.getRequestURI());
     }
 
     private void filter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -80,7 +80,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         return uri.toLowerCase().contains("admin");
     }
 
-    private boolean hasNotFilteredPrefix(String uri) {
+    private boolean hasNonFilteredPrefix(String uri) {
         return Arrays.stream(nonFilteredPrefixes).anyMatch(uri::startsWith);
     }
 
