@@ -78,7 +78,7 @@ public class AuthenticationService extends TokenGenerator {
     }
 
     public AccessTokenResult exchangeAuthorizationCode(AuthorizationCodeMessage message) {
-        //TODO: check client id
+        //TODO: check client userId
 
         String userId = authorizationCodeService.consumeAuthorizationCode(message.getCode(), message.getClientId(), message.getRedirectUri());
 

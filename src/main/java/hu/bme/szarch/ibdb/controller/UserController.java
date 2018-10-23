@@ -1,6 +1,6 @@
 package hu.bme.szarch.ibdb.controller;
 
-import hu.bme.szarch.ibdb.controller.dto.review.ReviewResponse;
+import hu.bme.szarch.ibdb.controller.dto.book.ReviewResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoryResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.ProfileRequest;

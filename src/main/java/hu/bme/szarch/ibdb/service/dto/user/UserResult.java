@@ -8,7 +8,7 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
-public class UserInfoResult {
+public class UserResult {
 
     private String id;
     private Role role;

@@ -4,7 +4,7 @@ import hu.bme.szarch.ibdb.domain.Role;
 import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.TokenService;
 import hu.bme.szarch.ibdb.service.UserService;
-import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
+import hu.bme.szarch.ibdb.service.dto.user.UserResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -65,11 +65,11 @@ public class AuthenticationFilter extends GenericFilterBean {
             return;
         }
 
-        UserInfoResult userInfoResult = userService.findById(userId.get());
+        UserResult userResult = userService.getUserInfo(userId.get());
 
-        if(isAdminEndpoint(request.getRequestURI()) && !userInfoResult.getRole().equals(Role.ADMIN)) {
+        if(isAdminEndpoint(request.getRequestURI()) && !userResult.getRole().equals(Role.ADMIN)) {
             response.sendError(401);
-        } else if(!userInfoResult.getRole().equals(Role.USER)) {
+        } else if(!userResult.getRole().equals(Role.USER)) {
             response.sendError(401);
         }
 

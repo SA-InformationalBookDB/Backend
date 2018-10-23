@@ -7,6 +7,7 @@ import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.AuthenticationService;
 import hu.bme.szarch.ibdb.service.dto.authorization.AuthorizationCodeMessage;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -37,6 +38,7 @@ public class OAuthController {
     }
 
     @PostMapping("/token")
+    @ApiOperation("Require access-token or refresh existing one. (grant_type = authorization_code|refresh_token)")
     public AccessTokenResponse token(
             @RequestParam(value = "grant_type") String grantType,
             @RequestParam(value = "client_id", defaultValue = "") String clientId,

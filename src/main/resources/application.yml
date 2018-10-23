@@ -4,10 +4,10 @@ spring:
       client:
         registration:
           facebook:
-            client-id: <facebook-id>
+            client-id: <facebook-userId>
             client-secret: <facebook-secret>
           google:
-            client-id: <google-id>
+            client-id: <google-userId>
             client-secret: <google-secret>
   jpa:
     hibernate:
@@ -20,6 +20,8 @@ spring:
     database: sql_server
 
 ibdb:
+  parameters:
+    default-page-size: 10
   security:
     non-filtered-prefixes: /oauth, /swagger, /webjars
     oauth2:

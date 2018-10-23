@@ -9,7 +9,7 @@ public class Favourite {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.userId.UUIDGenerator")
     private String id;
 
     @ManyToOne
