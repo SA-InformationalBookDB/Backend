@@ -73,7 +73,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             response.sendError(401);
         }
 
-        request.setAttribute("X-IBDB-USER", new UserInfo(userId.get()));
+        request.getSession().setAttribute("x-ibdb-user", new UserInfo(userId.get()));
     }
 
     private boolean isAdminEndpoint(String uri) {

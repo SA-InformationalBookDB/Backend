@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -69,6 +70,7 @@ public class AuthenticationService extends TokenGenerator {
                 .build();
     }
 
+    @Transactional
     public void logout(String userId) {
         if(userId == null) {
             throw new ServerException(Errors.UNABLE_TO_LOUGOUT);

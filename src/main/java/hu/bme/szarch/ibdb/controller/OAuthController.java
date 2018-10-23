@@ -61,7 +61,7 @@ public class OAuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestAttribute UserInfo userInfo) {
+    public void logout(@SessionAttribute("x-ibdb-user") UserInfo userInfo) {
         authenticationService.logout(userInfo.getUserId());
     }
 

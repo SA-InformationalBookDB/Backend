@@ -40,7 +40,7 @@ public class BookController {
     }
 
     @PostMapping("/offer")
-    public Page<BookResponse> getOfferedBooks(@RequestAttribute UserInfo userInfo,
+    public Page<BookResponse> getOfferedBooks(@SessionAttribute UserInfo userInfo,
                                               @RequestParam(required = false, defaultValue = "0") int page,
                                               @RequestParam(required = false, defaultValue = "10") int size,
                                               @RequestParam OffsetDateTime publishedAfter,
@@ -81,7 +81,7 @@ public class BookController {
     }
 
     @PostMapping("/{id}/review")
-    public void reviewBook(@RequestAttribute UserInfo userInfo,
+    public void reviewBook(@SessionAttribute UserInfo userInfo,
                            @PathVariable String id,
                            @RequestBody ReviewRequest request) {
         reviewService.createReview(DtoMapper.requestToMessage(userInfo.getUserId(), id, request));
