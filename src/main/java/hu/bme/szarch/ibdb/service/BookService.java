@@ -6,7 +6,9 @@ import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.BookRepository;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
+import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
+import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,7 +55,7 @@ public class BookService {
     public BookResult getBook(String id) {
         Optional<Book> book = bookRepository.findById(id);
 
-        if(!book.isPresent()) {
+        if (!book.isPresent()) {
             throw new ServerException(Errors.NOT_FOUND);
         }
 
@@ -63,7 +65,7 @@ public class BookService {
     public BookResult findById(String id) {
         Optional<Book> book = bookRepository.findById(id);
 
-        if(!book.isPresent()) {
+        if (!book.isPresent()) {
             throw new ServerException(Errors.NOT_FOUND);
         }
 
@@ -72,6 +74,79 @@ public class BookService {
 
     public Page<BookResult> findByTitle(Pageable pageable, String queryString) {
         return bookRepository.findAllByTitleContains(pageable, queryString).map(this::bookToResult);
+    }
+
+    public BookResult addBook(CreateBookMessage message) {
+        Book book = new Book();
+
+        book.setAuthor(message.getAuthor());
+        book.setImageUrl(message.getImageUrl());
+        book.setPageNumber(message.getPageNumber());
+        book.setPublished(message.getPublished());
+        book.setPublisher(message.getPublisher());
+        book.setSold(message.getSold());
+        book.setSummary(message.getSummary());
+        book.setTitle(message.getTitle());
+        book.setViews(message.getViews());
+
+        Book createdBook = bookRepository.save(book);
+
+        return BookResult.builder()
+                .id(createdBook.getId())
+                .author(message.getAuthor())
+                .imageUrl(message.getImageUrl())
+                .pageNumber(message.getPageNumber())
+                .published(message.getPublished())
+                .publisher(message.getPublisher())
+                .sold(message.getSold())
+                .summary(message.getSummary())
+                .title(message.getTitle())
+                .views(message.getViews())
+                .build();
+    }
+
+
+    public void deleteBook(String bookId) {
+        Optional<Book> book = bookRepository.findById(bookId);
+
+        if (!book.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+
+        bookRepository.delete(book.get());
+    }
+
+    public BookResult updateBook(UpdateBookMessage message) {
+        Optional<Book> book = bookRepository.findById(message.getId());
+
+        if(!book.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+
+        book.get().setAuthor(message.getAuthor());
+        book.get().setImageUrl(message.getImageUrl());
+        book.get().setPageNumber(message.getPageNumber());
+        book.get().setPublished(message.getPublished());
+        book.get().setPublisher(message.getPublisher());
+        book.get().setSold(message.getSold());
+        book.get().setSummary(message.getSummary());
+        book.get().setTitle(message.getTitle());
+        book.get().setViews(message.getViews());
+
+        bookRepository.save(book.get());
+
+        return BookResult.builder()
+                .id(book.get().getId())
+                .author(message.getAuthor())
+                .imageUrl(message.getImageUrl())
+                .pageNumber(message.getPageNumber())
+                .published(message.getPublished())
+                .publisher(message.getPublisher())
+                .sold(message.getSold())
+                .summary(message.getSummary())
+                .title(message.getTitle())
+                .views(message.getViews())
+                .build();
     }
 
     private BookResult bookToResult(Book book) {

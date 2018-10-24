@@ -34,6 +34,10 @@ public class ReviewService {
         return reviewRepository.findAllByBook_Id(pageable, bookId).map(this::reviewToResult);
     }
 
+    public Page<ReviewResult> getReviewsForUser(Pageable pageable, String userId) {
+        return reviewRepository.findAllByUser_Id(pageable, userId).map(this::reviewToResult);
+    }
+
     public void createReview(ReviewMessage message) {
         Optional<Book> book = bookRepository.findById(message.getBookId());
         Optional<User> user = userRepository.findById(message.getUserId());
@@ -51,6 +55,16 @@ public class ReviewService {
         review.setPoints(message.getPoints());
 
         reviewRepository.save(review);
+    }
+
+    public void deleteReview(String userId, String reviewId) {
+        Optional<Review> review = reviewRepository.findByIdAndUser_Id(reviewId, userId);
+
+        if(!review.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+
+        reviewRepository.delete(review.get());
     }
 
     private ReviewResult reviewToResult(Review review) {

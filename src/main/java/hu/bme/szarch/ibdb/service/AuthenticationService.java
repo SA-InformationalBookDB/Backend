@@ -71,12 +71,8 @@ public class AuthenticationService extends TokenGenerator {
     }
 
     @Transactional
-    public void logout(String userId) {
-        if(userId == null) {
-            throw new ServerException(Errors.UNABLE_TO_LOUGOUT);
-        }
-
-        tokenService.deleteUserTokens(userId);
+    public void logout(String accessToken) {
+        tokenService.deleteToken(accessToken);
     }
 
     public AccessTokenResult exchangeAuthorizationCode(AuthorizationCodeMessage message) {

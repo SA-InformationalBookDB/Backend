@@ -44,4 +44,26 @@ public class UserService {
         return user.get().getCategories();
     }
 
+    public void deleteUser(String userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(!user.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+
+        userRepository.delete(user.get());
+    }
+
+
+    public void enableOrDisableUser(String userId, boolean isEnabled) {
+        Optional<User> user = this.userRepository.findById(userId);
+
+        if(!user.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+        user.get().setEnabled(isEnabled);
+
+        this.userRepository.save(user.get());
+    }
+
 }

@@ -12,6 +12,7 @@ public class Category {
     @GeneratedValue(generator = "uuid2")
     private String id;
 
+    @Column(unique = true)
     private String name;
 
 }

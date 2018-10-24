@@ -29,6 +29,8 @@ public class AuthenticationFilter extends GenericFilterBean {
 
     private UserService userService;
 
+    public static final String userInfoAttribute = "x-ibdb-user";
+
     public AuthenticationFilter(TokenService tokenService, UserService userService) {
         this.tokenService = tokenService;
         this.userService = userService;
@@ -73,7 +75,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             response.sendError(401);
         }
 
-        request.getSession().setAttribute("x-ibdb-user", new UserInfo(userId.get()));
+        request.getSession().setAttribute(userInfoAttribute, new UserInfo(userId.get()));
     }
 
     private boolean isAdminEndpoint(String uri) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class BookRequest {
+public class OfferBookRequest {
 
     private List<String> authors;
 

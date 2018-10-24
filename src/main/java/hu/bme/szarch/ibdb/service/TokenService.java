@@ -80,6 +80,10 @@ public class TokenService extends TokenGenerator {
         return accessToken.map(AccessToken::getUserId);
     }
 
+    public void deleteToken(String accessToken) {
+        accessTokenRepository.deleteById(accessToken);
+    }
+
     public void deleteUserTokens(String userId) {
         accessTokenRepository.deleteAllByUserId(userId);
     }

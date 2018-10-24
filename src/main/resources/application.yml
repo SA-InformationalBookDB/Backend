@@ -23,7 +23,7 @@ ibdb:
   parameters:
     default-page-size: 10
   security:
-    non-filtered-prefixes: /oauth/authorize, /oauth/register, /oauth/login, /oauth/token, /swagger, /webjars
+    non-filtered-prefixes: /oauth, /swagger, /webjars
     oauth2:
       access-token-expiration-in: 5
       access-token-length: 64

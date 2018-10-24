@@ -4,7 +4,6 @@ import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.oauth.*;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
-import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.AuthenticationService;
 import hu.bme.szarch.ibdb.service.dto.authorization.AuthorizationCodeMessage;
 import io.swagger.annotations.ApiOperation;
@@ -61,8 +60,8 @@ public class OAuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(@SessionAttribute("x-ibdb-user") UserInfo userInfo) {
-        authenticationService.logout(userInfo.getUserId());
+    public void logout(@RequestBody LogoutRequest request) {
+        authenticationService.logout(request.getAccessToken());
     }
 
     @GetMapping("/authorize")

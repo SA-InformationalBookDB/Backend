@@ -1,10 +1,11 @@
 package hu.bme.szarch.ibdb.controller;
 
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
-import hu.bme.szarch.ibdb.controller.dto.book.BookRequest;
+import hu.bme.szarch.ibdb.controller.dto.book.OfferBookRequest;
 import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
 import hu.bme.szarch.ibdb.controller.dto.book.ReviewRequest;
 import hu.bme.szarch.ibdb.controller.dto.book.ReviewResponse;
+import hu.bme.szarch.ibdb.filter.AuthenticationFilter;
 import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.BookService;
 import hu.bme.szarch.ibdb.service.ReviewService;
@@ -40,11 +41,11 @@ public class BookController {
     }
 
     @PostMapping("/offer")
-    public Page<BookResponse> getOfferedBooks(@SessionAttribute UserInfo userInfo,
+    public Page<BookResponse> getOfferedBooks(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
                                               @RequestParam(required = false, defaultValue = "0") int page,
                                               @RequestParam(required = false, defaultValue = "10") int size,
                                               @RequestParam OffsetDateTime publishedAfter,
-                                              @RequestBody BookRequest request) {
+                                              @RequestBody OfferBookRequest request) {
         return DtoMapper.bookResultsToResponse(bookService.findOffered(OfferedBookQuery.builder()
                 .pageable(PageRequest.of(page, size))
                 .authors(request.getAuthors())
@@ -81,7 +82,7 @@ public class BookController {
     }
 
     @PostMapping("/{id}/review")
-    public void reviewBook(@SessionAttribute UserInfo userInfo,
+    public void reviewBook(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
                            @PathVariable String id,
                            @RequestBody ReviewRequest request) {
         reviewService.createReview(DtoMapper.requestToMessage(userInfo.getUserId(), id, request));

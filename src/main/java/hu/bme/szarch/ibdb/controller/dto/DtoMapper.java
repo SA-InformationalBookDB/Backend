@@ -1,14 +1,14 @@
 package hu.bme.szarch.ibdb.controller.dto;
 
-import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
-import hu.bme.szarch.ibdb.controller.dto.book.ReviewRequest;
-import hu.bme.szarch.ibdb.controller.dto.book.ReviewResponse;
+import hu.bme.szarch.ibdb.controller.dto.book.*;
 import hu.bme.szarch.ibdb.controller.dto.oauth.*;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationResult;
+import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
+import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewResult;
 import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
@@ -91,6 +91,35 @@ public class DtoMapper {
                 .userId(userId)
                 .comment(request.getComment())
                 .points(request.getPoints())
+                .build();
+    }
+
+    public static CreateBookMessage requestToMessage(CreateBookRequest request) {
+        return CreateBookMessage.builder()
+                .author(request.getAuthor())
+                .imageUrl(request.getImageUrl())
+                .pageNumber(request.getPageNumber())
+                .published(request.getPublished())
+                .publisher(request.getPublisher())
+                .sold(request.getSold())
+                .summary(request.getSummary())
+                .title(request.getTitle())
+                .views(request.getViews())
+                .build();
+    }
+
+    public static UpdateBookMessage requestToMessage(String bookId, UpdateBookRequest request) {
+        return UpdateBookMessage.builder()
+                .id(bookId)
+                .author(request.getAuthor())
+                .imageUrl(request.getImageUrl())
+                .pageNumber(request.getPageNumber())
+                .published(request.getPublished())
+                .publisher(request.getPublisher())
+                .sold(request.getSold())
+                .summary(request.getSummary())
+                .title(request.getTitle())
+                .views(request.getViews())
                 .build();
     }
 
