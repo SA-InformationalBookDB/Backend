@@ -2,16 +2,25 @@ package hu.bme.szarch.ibdb.controller.dto;
 
 import hu.bme.szarch.ibdb.controller.dto.book.*;
 import hu.bme.szarch.ibdb.controller.dto.oauth.*;
+import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
+import hu.bme.szarch.ibdb.controller.dto.user.CategoryResponse;
+import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
+import hu.bme.szarch.ibdb.controller.dto.user.UserUpdateRequest;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationResult;
+import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
 import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewResult;
 import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
+import hu.bme.szarch.ibdb.service.dto.user.FavouriteMessage;
+import hu.bme.szarch.ibdb.service.dto.user.CategoriesUpdateMessage;
+import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
+import hu.bme.szarch.ibdb.service.dto.user.UserUpdateMessage;
 import org.springframework.data.domain.Page;
 
 public class DtoMapper {
@@ -94,7 +103,7 @@ public class DtoMapper {
                 .build();
     }
 
-    public static CreateBookMessage requestToMessage(CreateBookRequest request) {
+    public static CreateBookMessage requestToMessage(BookRequest request) {
         return CreateBookMessage.builder()
                 .author(request.getAuthor())
                 .imageUrl(request.getImageUrl())
@@ -108,7 +117,7 @@ public class DtoMapper {
                 .build();
     }
 
-    public static UpdateBookMessage requestToMessage(String bookId, UpdateBookRequest request) {
+    public static UpdateBookMessage requestToMessage(String bookId, BookRequest request) {
         return UpdateBookMessage.builder()
                 .id(bookId)
                 .author(request.getAuthor())
@@ -120,6 +129,44 @@ public class DtoMapper {
                 .summary(request.getSummary())
                 .title(request.getTitle())
                 .views(request.getViews())
+                .build();
+    }
+
+    public static UserUpdateMessage requestToMessage(String userId, UserUpdateRequest request) {
+        return UserUpdateMessage.builder()
+                .id(userId)
+                .dateOfBirth(request.getBirthDate())
+                .email(request.getEmail())
+                .build();
+    }
+
+    public static UserInfoResponse resultToResponse(UserInfoResult result) {
+        return UserInfoResponse.builder()
+                .id(result.getId())
+                .birthDate(result.getDateOfBirth())
+                .email(result.getEmail())
+                .role(result.getRole())
+                .build();
+    }
+
+    public static CategoriesUpdateMessage requestToMessage(String userId, CategoriesUpdateRequest request) {
+        return CategoriesUpdateMessage.builder()
+                .userId(userId)
+                .categoryIds(request.getCategoryIds())
+                .build();
+    }
+
+    public static CategoryResponse resultToResponse(CategoryResult result) {
+        return CategoryResponse.builder()
+                .id(result.getId())
+                .name(result.getName())
+                .build();
+    }
+
+    public static FavouriteMessage requestToMessage(String userId, String bookId) {
+        return FavouriteMessage.builder()
+                .userId(userId)
+                .bookId(bookId)
                 .build();
     }
 

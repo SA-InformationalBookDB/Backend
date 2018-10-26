@@ -1,15 +1,16 @@
-package hu.bme.szarch.ibdb.controller.dto.user;
+package hu.bme.szarch.ibdb.service.dto.category;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Builder
-@Setter
 @Getter
-public class CategoryResponse {
+@Setter
+public class CategoryResult {
 
     private String id;
+
     private String name;
 
 }

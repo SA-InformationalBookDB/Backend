@@ -1,8 +1,8 @@
 package hu.bme.szarch.ibdb.controller;
 
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
-import hu.bme.szarch.ibdb.controller.dto.book.OfferBookRequest;
 import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
+import hu.bme.szarch.ibdb.controller.dto.book.OfferBookRequest;
 import hu.bme.szarch.ibdb.controller.dto.book.ReviewRequest;
 import hu.bme.szarch.ibdb.controller.dto.book.ReviewResponse;
 import hu.bme.szarch.ibdb.filter.AuthenticationFilter;
@@ -67,11 +67,18 @@ public class BookController {
         return DtoMapper.resultToResponse(bookService.getBook(id));
     }
 
-    @GetMapping("/{id}/reviews")
+    @GetMapping("/{id}/review")
     public Page<ReviewResponse> getBookReviews(@PathVariable String id,
                                                @RequestParam(required = false, defaultValue = "0") int page,
                                                @RequestParam(required = false, defaultValue = "10") int size) {
         return DtoMapper.reviewResultsToResponse(reviewService.getReviewsForBook(PageRequest.of(page, size), id));
+    }
+
+    @PostMapping("/{id}/review")
+    public void addReview(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
+                          @PathVariable String id,
+                          @RequestBody ReviewRequest request) {
+        reviewService.createReview(DtoMapper.requestToMessage(userInfo.getUserId(), id, request));
     }
 
     @PostMapping("/find")
@@ -80,12 +87,4 @@ public class BookController {
                                         @RequestParam String queryString) {
         return DtoMapper.bookResultsToResponse(bookService.findByTitle(PageRequest.of(page, size), queryString));
     }
-
-    @PostMapping("/{id}/review")
-    public void reviewBook(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                           @PathVariable String id,
-                           @RequestBody ReviewRequest request) {
-        reviewService.createReview(DtoMapper.requestToMessage(userInfo.getUserId(), id, request));
-    }
-
 }

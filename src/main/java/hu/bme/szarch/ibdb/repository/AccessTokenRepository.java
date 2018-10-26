@@ -9,6 +9,4 @@ public interface AccessTokenRepository extends CrudRepository<AccessToken, Strin
 
     void deleteAllByExpirationDateBefore(OffsetDateTime date);
 
-    void deleteAllByUserId(String userId);
-
 }

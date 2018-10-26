@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Setter
 @Getter
-public class UpdateBookRequest {
+public class BookRequest {
 
     private String title;
 

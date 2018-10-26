@@ -1,14 +1,14 @@
 package hu.bme.szarch.ibdb.controller.dto.oauth;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
+@Builder
 public class LoginRequest {
 
     @NotNull

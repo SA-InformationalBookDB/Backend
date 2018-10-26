@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import java.time.OffsetDateTime;
 
@@ -26,9 +25,6 @@ public class AccessToken {
     private String userId;
 
     private OffsetDateTime created;
-
-    @OneToOne
-    private RefreshToken refreshToken;
 
     @PrePersist
     public void onPrePersist() {

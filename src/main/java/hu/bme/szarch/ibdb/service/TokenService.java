@@ -37,42 +37,23 @@ public class TokenService extends TokenGenerator {
 
     @Transactional
     public AccessTokenResult createAccessToken(String userId) throws AuthenticationException {
-
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setValue(generateRandomToken(refreshTokenLength));
-
-        AccessToken accessToken = new AccessToken();
-        accessToken.setExpirationDate(OffsetDateTime.now().plusMinutes(5));
-        accessToken.setRefreshToken(refreshToken);
-        accessToken.setUserId(userId);
-        accessToken.setValue(generateRandomToken(accessTokenLength));
-
-        refreshTokenRepository.save(refreshToken);
-        accessTokenRepository.save(accessToken);
-
-        return AccessTokenResult.builder()
-                .accessToken(accessToken.getValue())
-                .accessTokenExpiration(accessToken.getExpirationDate())
-                .refreshToken(refreshToken.getValue())
-                .build();
+        return createTokens(userId);
     }
 
+    @Transactional
     public AccessTokenResult refreshAccessToken(String rawRefreshToken) throws AuthenticationException {
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(rawRefreshToken);
 
-        if (!refreshToken.isPresent() || !refreshToken.get().getAccessToken().getExpirationDate().isBefore(OffsetDateTime.now())) {
+        if (!refreshToken.isPresent()) {
             throw new ServerException(Errors.INVALID_ACCESS_TOKEN);
         }
 
-        refreshToken.get().getAccessToken().setExpirationDate(OffsetDateTime.now().plusMinutes(accessTokenExpirationInXMinutes));
+        String userId = refreshToken.get().getAccessToken().getUserId();
 
-        refreshTokenRepository.save(refreshToken.get());
+        accessTokenRepository.delete(refreshToken.get().getAccessToken());
+        refreshTokenRepository.delete(refreshToken.get());
 
-        return AccessTokenResult.builder()
-                .accessToken(refreshToken.get().getAccessToken().getValue())
-                .refreshToken(refreshToken.get().getValue())
-                .accessTokenExpiration(refreshToken.get().getAccessToken().getExpirationDate())
-                .build();
+        return createAccessToken(userId);
     }
 
     public Optional<String> getUserIdByAccessToken(String rawAccessToken) {
@@ -84,12 +65,29 @@ public class TokenService extends TokenGenerator {
         accessTokenRepository.deleteById(accessToken);
     }
 
-    public void deleteUserTokens(String userId) {
-        accessTokenRepository.deleteAllByUserId(userId);
-    }
-
     public void deleteExpiredTokens() {
         accessTokenRepository.deleteAllByExpirationDateBefore(OffsetDateTime.now());
+    }
+
+    private AccessTokenResult createTokens(String userId) {
+
+        AccessToken accessToken = new AccessToken();
+        accessToken.setExpirationDate(OffsetDateTime.now().plusMinutes(5));
+        accessToken.setUserId(userId);
+        accessToken.setValue(generateRandomToken(accessTokenLength));
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setValue(generateRandomToken(refreshTokenLength));
+        refreshToken.setAccessToken(accessToken);
+
+        accessTokenRepository.save(accessToken);
+        refreshTokenRepository.save(refreshToken);
+
+        return AccessTokenResult.builder()
+                .accessToken(accessToken.getValue())
+                .accessTokenExpiration(accessToken.getExpirationDate())
+                .refreshToken(refreshToken.getValue())
+                .build();
     }
 
 }

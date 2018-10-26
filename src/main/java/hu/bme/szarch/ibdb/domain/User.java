@@ -24,8 +24,8 @@ public class User {
 
     private OffsetDateTime dateOfBirth;
 
-    @OneToMany
-    private List<Favourite> favourites;
+    @ManyToMany
+    private List<Book> favourites;
 
     @OneToMany
     private List<Category> categories;
@@ -36,6 +36,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean isEnabled;
+    private boolean enabled = false;
 
 }
