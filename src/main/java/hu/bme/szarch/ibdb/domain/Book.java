@@ -33,7 +33,7 @@ public class Book {
     @OneToMany
     private List<Review> reviews;
 
-    @OneToMany
+    @ManyToMany
     private List<Category> categories;
 
     private String imageUrl;
