@@ -69,6 +69,15 @@ public class ReviewService {
         reviewRepository.delete(review.get());
     }
 
+    private void countAverageResultForBook(Book book, int newRating) {
+        double ratingSum = book.getReviews().stream().mapToInt(Review::getPoints).sum();
+        ratingSum += newRating;
+
+        book.setAverageRating(ratingSum/book.getReviews().size());
+
+        bookRepository.save(book);
+    }
+
     private ReviewResult reviewToResult(Review review) {
         return ReviewResult.builder()
                 .id(review.getId())
