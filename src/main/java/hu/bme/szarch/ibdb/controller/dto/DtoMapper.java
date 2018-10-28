@@ -78,6 +78,7 @@ public class DtoMapper {
                 .summary(result.getSummary())
                 .title(result.getTitle())
                 .views(result.getViews())
+                .averageRating(result.getAverageRating())
                 .build();
     }
 

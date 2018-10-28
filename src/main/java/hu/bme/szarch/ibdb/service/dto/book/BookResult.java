@@ -31,4 +31,6 @@ public class BookResult {
 
     private int views;
 
+    private double averageRating;
+
 }

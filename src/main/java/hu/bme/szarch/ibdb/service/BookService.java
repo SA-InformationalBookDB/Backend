@@ -128,6 +128,7 @@ public class BookService {
                 .summary(book.getSummary())
                 .title(book.getTitle())
                 .views(book.getViews())
+                .averageRating(book.getAverageRating())
                 .build();
     }
 

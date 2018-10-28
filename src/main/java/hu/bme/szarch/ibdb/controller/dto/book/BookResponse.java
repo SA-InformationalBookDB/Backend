@@ -21,5 +21,6 @@ public class BookResponse {
     private int pageNumber;
     private int sold;
     private int views;
+    private double averageRating;
 
 }
