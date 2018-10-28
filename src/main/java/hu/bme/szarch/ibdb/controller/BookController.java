@@ -12,6 +12,7 @@ import hu.bme.szarch.ibdb.service.ReviewService;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -44,7 +45,7 @@ public class BookController {
     public Page<BookResponse> getOfferedBooks(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
                                               @RequestParam(required = false, defaultValue = "0") int page,
                                               @RequestParam(required = false, defaultValue = "10") int size,
-                                              @RequestParam OffsetDateTime publishedAfter,
+                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime publishedAfter,
                                               @RequestBody OfferBookRequest request) {
         return DtoMapper.bookResultsToResponse(bookService.findOffered(OfferedBookQuery.builder()
                 .pageable(PageRequest.of(page, size))
@@ -58,7 +59,7 @@ public class BookController {
     @GetMapping("/trending")
     public Page<BookResponse> getTrendingBooks(@RequestParam(required = false, defaultValue = "0") int page,
                                                @RequestParam(required = false, defaultValue = "10") int size,
-                                               @RequestParam OffsetDateTime publishedAfter) {
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime publishedAfter) {
         return DtoMapper.bookResultsToResponse(bookService.getTrending(PageRequest.of(page, size), publishedAfter));
     }
 
