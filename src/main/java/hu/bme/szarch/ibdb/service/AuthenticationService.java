@@ -5,9 +5,13 @@ import hu.bme.szarch.ibdb.domain.User;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.UserRepository;
+import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
+import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
+import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationMessage;
+import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationResult;
 import hu.bme.szarch.ibdb.service.dto.authorization.AuthorizationCodeMessage;
-import hu.bme.szarch.ibdb.service.dto.authentication.*;
 import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +23,9 @@ import java.util.Optional;
 
 @Service
 public class AuthenticationService extends TokenGenerator {
+
+    @Value("${ibdb.security.oauth2.client-id}")
+    private String clientId;
 
     private UserRepository userRepository;
     private AuthorizationCodeService authorizationCodeService;
@@ -49,6 +56,7 @@ public class AuthenticationService extends TokenGenerator {
         user.setRole(Role.USER);
         user.setReviews(Collections.emptyList());
         user.setFavourites(Collections.emptyList());
+        user.setEnabled(true);
 
         user = userRepository.save(user);
 
@@ -76,7 +84,10 @@ public class AuthenticationService extends TokenGenerator {
     }
 
     public AccessTokenResult exchangeAuthorizationCode(AuthorizationCodeMessage message) {
-        //TODO: check client userId
+
+        if(!message.getClientId().equals(clientId)) {
+            throw new ServerException(Errors.INVALID_CLIENT_ID);
+        }
 
         String userId = authorizationCodeService.consumeAuthorizationCode(message.getCode(), message.getClientId(), message.getRedirectUri());
 

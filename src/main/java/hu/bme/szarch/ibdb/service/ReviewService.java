@@ -24,7 +24,9 @@ public class ReviewService {
     private BookRepository bookRepository;
     private UserRepository userRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, BookRepository bookRepository, UserRepository userRepository) {
+    public ReviewService(ReviewRepository reviewRepository,
+                         BookRepository bookRepository,
+                         UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;

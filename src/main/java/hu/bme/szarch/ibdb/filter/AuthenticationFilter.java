@@ -41,8 +41,11 @@ public class AuthenticationFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+
         if(shouldFilter(request)) {
-            filter(request, response);
+            if(filter(request, response)) {
+                return;
+            }
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
@@ -52,30 +55,33 @@ public class AuthenticationFilter extends GenericFilterBean {
         return !hasNonFilteredPrefix(request.getRequestURI());
     }
 
-    private void filter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private boolean filter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String accessToken = request.getHeader("Authorization");
 
         if(accessToken == null) {
             response.sendError(401);
-            return;
+            return true;
         }
 
         Optional<String> userId = tokenService.getUserIdByAccessToken(accessToken);
 
         if(!userId.isPresent()) {
             response.sendError(401);
-            return;
+            return true;
         }
 
         UserInfoResult userResult = userService.getUserInfo(userId.get());
 
         if(isAdminEndpoint(request.getRequestURI()) && !userResult.getRole().equals(Role.ADMIN)) {
             response.sendError(401);
-        } else if(!userResult.getRole().equals(Role.USER)) {
+            return true;
+        } else if(!userResult.getRole().equals(Role.USER) && !userResult.getRole().equals(Role.ADMIN)) {
             response.sendError(401);
+            return true;
         }
 
         request.getSession().setAttribute(userInfoAttribute, new UserInfo(userId.get()));
+        return false;
     }
 
     private boolean isAdminEndpoint(String uri) {

@@ -14,11 +14,11 @@ public class IbdbExceptionHandler {
 
     @ExceptionHandler(ServerException.class)
     public Object handleServerException(ServerException exception, WebRequest request) {
-        if(exception.getError().equals(Errors.BAD_REQUEST)) {
+        if(exception.getError().getCode() == Errors.BAD_REQUEST.getCode()) {
             return new ResponseEntity<>(exception.getError(), HttpStatus.BAD_REQUEST);
-        } else if(exception.getError().equals(Errors.NOT_FOUND)) {
+        } else if(exception.getError().getCode() == Errors.NOT_FOUND.getCode()) {
             return new ResponseEntity<>(exception.getError(), HttpStatus.NOT_FOUND);
-        } else if(exception.getError().equals(Errors.UNAUTHORIZED)) {
+        } else if(exception.getError().getCode() == Errors.UNAUTHORIZED.getCode()) {
             return new ResponseEntity<>(exception.getError(), HttpStatus.UNAUTHORIZED);
         }
 

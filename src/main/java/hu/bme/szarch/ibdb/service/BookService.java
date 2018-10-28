@@ -24,7 +24,8 @@ public class BookService {
     private BookRepository bookRepository;
     private UserService userService;
 
-    public BookService(BookRepository bookRepository, UserService userService) {
+    public BookService(BookRepository bookRepository,
+                       UserService userService) {
         this.bookRepository = bookRepository;
         this.userService = userService;
     }

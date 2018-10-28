@@ -1,9 +1,6 @@
 package hu.bme.szarch.ibdb.controller.dto.book;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -11,6 +8,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class BookRequest {
 
     private String title;

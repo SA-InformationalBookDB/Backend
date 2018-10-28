@@ -30,7 +30,8 @@ public class TokenService extends TokenGenerator {
     private AccessTokenRepository accessTokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
 
-    public TokenService(AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public TokenService(AccessTokenRepository accessTokenRepository,
+                        RefreshTokenRepository refreshTokenRepository) {
         this.accessTokenRepository = accessTokenRepository;
         this.refreshTokenRepository = refreshTokenRepository;
     }

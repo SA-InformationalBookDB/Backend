@@ -37,7 +37,7 @@ public class OAuthIT extends TestBase {
         LoginRequest request = LoginRequest.builder()
                 .email("test2@test.test")
                 .password("Asdqwe123")
-                .clientId("213131241")
+                .clientId("73281642736")
                 .redirectUri("http://localhost/login")
                 .build();
 
@@ -54,7 +54,7 @@ public class OAuthIT extends TestBase {
                         .path("/oauth/token")
                         .queryParam("grant_type", "authorization_code")
                         .queryParam("redirect_uri", "http://localhost/login")
-                        .queryParam("client_id", "213131241")
+                        .queryParam("client_id", "73281642736")
                         .queryParam("code", response.getCode())
                         .build()
                 )
