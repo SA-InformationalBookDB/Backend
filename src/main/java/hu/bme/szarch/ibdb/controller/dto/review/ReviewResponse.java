@@ -1,4 +1,4 @@
-package hu.bme.szarch.ibdb.controller.dto.book;
+package hu.bme.szarch.ibdb.controller.dto.review;
 
 import lombok.*;
 

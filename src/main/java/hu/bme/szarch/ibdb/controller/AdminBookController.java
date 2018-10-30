@@ -18,7 +18,7 @@ public class AdminBookController {
 
     @PostMapping
     public BookResponse addBook(@RequestBody BookRequest request) {
-        return DtoMapper.resultToResponse(bookService.addBook(DtoMapper.requestToMessage(request)));
+        return DtoMapper.bookResultToResponse(bookService.addBook(DtoMapper.createBookRequestToMessage(request)));
     }
 
     @DeleteMapping("/{id}")
@@ -28,7 +28,7 @@ public class AdminBookController {
 
     @PutMapping("/{id}")
     public BookResponse updateBook(@PathVariable("id") String bookId, @RequestBody BookRequest request) {
-        return DtoMapper.resultToResponse(bookService.updateBook(DtoMapper.requestToMessage(bookId, request)));
+        return DtoMapper.bookResultToResponse(bookService.updateBook(DtoMapper.updateBookRequestToMessage(bookId, request)));
     }
 
 }

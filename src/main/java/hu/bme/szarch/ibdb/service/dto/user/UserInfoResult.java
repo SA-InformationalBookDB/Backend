@@ -13,8 +13,12 @@ import java.time.OffsetDateTime;
 public class UserInfoResult {
 
     private String id;
+    private String nickname;
     private Role role;
     private OffsetDateTime dateOfBirth;
     private String email;
+
+    /**Currently for internal use*/
+    private boolean enabled;
 
 }

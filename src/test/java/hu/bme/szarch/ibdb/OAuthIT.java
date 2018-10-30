@@ -18,6 +18,7 @@ public class OAuthIT extends TestBase {
         RegistrationRequest request = RegistrationRequest.builder()
                 .email("test1@test.test")
                 .password("Asdqwe123")
+                .confirmPassword("Asdqwe123")
                 .build();
 
         client.post()
@@ -32,7 +33,7 @@ public class OAuthIT extends TestBase {
 
     @Test
     public void login() {
-        withOneUser(RegistrationRequest.builder().email("test2@test.test").password("Asdqwe123").build());
+        withOneUser(RegistrationRequest.builder().email("test2@test.test").password("Asdqwe123").confirmPassword("Asdqwe123").build());
 
         LoginRequest request = LoginRequest.builder()
                 .email("test2@test.test")

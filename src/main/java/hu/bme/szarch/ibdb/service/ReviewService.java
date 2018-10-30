@@ -8,8 +8,9 @@ import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.BookRepository;
 import hu.bme.szarch.ibdb.repository.ReviewRepository;
 import hu.bme.szarch.ibdb.repository.UserRepository;
-import hu.bme.szarch.ibdb.service.dto.review.ReviewMessage;
+import hu.bme.szarch.ibdb.service.dto.review.CreateReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewResult;
+import hu.bme.szarch.ibdb.service.dto.review.UpdateReviewMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class ReviewService {
         return reviewRepository.findAllByUser_Id(pageable, userId).map(this::reviewToResult);
     }
 
-    public void createReview(ReviewMessage message) {
+    public void createReview(CreateReviewMessage message) {
         Optional<Book> book = bookRepository.findById(message.getBookId());
         Optional<User> user = userRepository.findById(message.getUserId());
 
@@ -56,7 +57,26 @@ public class ReviewService {
         review.setDate(OffsetDateTime.now());
         review.setPoints(message.getPoints());
 
+        countAverageResultForBook(book.get(), message.getPoints());
+
         reviewRepository.save(review);
+    }
+
+    public void updateReview(UpdateReviewMessage message) {
+        Optional<Review> review = reviewRepository.findById(message.getReviewId());
+
+        if(!review.isPresent()) {
+            throw new ServerException(Errors.NOT_FOUND);
+        }
+
+        if(!review.get().getUser().getId().equals(message.getUserId())) {
+            throw new ServerException(Errors.BAD_REQUEST);
+        }
+
+        review.get().setComment(message.getComment());
+        review.get().setPoints(message.getPoints());
+
+        reviewRepository.save(review.get());
     }
 
     public void deleteReview(String userId, String reviewId) {

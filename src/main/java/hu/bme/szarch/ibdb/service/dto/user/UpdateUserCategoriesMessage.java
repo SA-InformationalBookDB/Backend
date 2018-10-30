@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class CategoriesUpdateMessage {
+public class UpdateUserCategoriesMessage {
 
     private String userId;
     private List<String> categoryIds;

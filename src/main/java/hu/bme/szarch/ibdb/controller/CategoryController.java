@@ -22,7 +22,7 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryResponse> getCategories() {
-        return categoryService.getCategories().stream().map(DtoMapper::resultToResponse).collect(Collectors.toList());
+        return categoryService.getCategories().stream().map(DtoMapper::categoryResultToResponse).collect(Collectors.toList());
     }
 
 

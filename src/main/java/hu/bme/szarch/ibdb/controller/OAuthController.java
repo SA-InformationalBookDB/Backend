@@ -13,9 +13,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
-import static hu.bme.szarch.ibdb.controller.dto.DtoMapper.requestToMessage;
-import static hu.bme.szarch.ibdb.controller.dto.DtoMapper.resultToResponse;
-
 @RestController
 @RequestMapping("/oauth")
 public class OAuthController {
@@ -28,12 +25,12 @@ public class OAuthController {
 
     @PostMapping("/register")
     public RegistrationResponse register(@Valid @RequestBody RegistrationRequest request) {
-        return resultToResponse(authenticationService.register(requestToMessage(request)));
+        return DtoMapper.registrationResultToResponse(authenticationService.register(DtoMapper.registrationRequestToMessage(request)));
     }
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        return resultToResponse(authenticationService.login(requestToMessage(request)));
+        return DtoMapper.loginResultToResponse(authenticationService.login(DtoMapper.loginRequestToMessage(request)));
     }
 
     @PostMapping("/token")
@@ -47,13 +44,13 @@ public class OAuthController {
 
     ) {
         if (grantType.equals("authorization_code") && !code.isEmpty()) {
-            return DtoMapper.resultToResponse(authenticationService.exchangeAuthorizationCode(AuthorizationCodeMessage.builder()
+            return DtoMapper.accessTokenResultToResponse(authenticationService.exchangeAuthorizationCode(AuthorizationCodeMessage.builder()
                     .clientId(clientId)
                     .code(code)
                     .redirectUri(redirectUri)
                     .build()));
         } else if (grantType.equals("refresh_token") && !refreshToken.isEmpty()) {
-           return DtoMapper.resultToResponse(authenticationService.refreshAccessToken(refreshToken));
+           return DtoMapper.accessTokenResultToResponse(authenticationService.refreshAccessToken(refreshToken));
         }
 
         throw new ServerException(Errors.BAD_REQUEST);

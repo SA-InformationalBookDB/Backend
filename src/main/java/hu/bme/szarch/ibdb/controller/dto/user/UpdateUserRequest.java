@@ -9,9 +9,10 @@ import java.time.OffsetDateTime;
 @Builder
 @Getter
 @Setter
-public class UserUpdateRequest {
+public class UpdateUserRequest {
 
     private String email;
+    private String nickname;
     private OffsetDateTime birthDate;
 
 }
