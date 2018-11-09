@@ -12,6 +12,7 @@ public class UserInfoResponse {
     private String id;
     private String email;
     private Role role;
+    private String nickname;
     private OffsetDateTime birthDate;
 
 }

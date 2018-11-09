@@ -3,8 +3,6 @@ package hu.bme.szarch.ibdb.controller;
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
 import hu.bme.szarch.ibdb.controller.dto.book.OfferBookRequest;
-import hu.bme.szarch.ibdb.controller.dto.book.ReviewRequest;
-import hu.bme.szarch.ibdb.controller.dto.book.ReviewResponse;
 import hu.bme.szarch.ibdb.filter.AuthenticationFilter;
 import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.BookService;
@@ -65,21 +63,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public BookResponse getBook(@PathVariable String id) {
-        return DtoMapper.resultToResponse(bookService.getBook(id));
-    }
-
-    @GetMapping("/{id}/review")
-    public Page<ReviewResponse> getBookReviews(@PathVariable String id,
-                                               @RequestParam(required = false, defaultValue = "0") int page,
-                                               @RequestParam(required = false, defaultValue = "10") int size) {
-        return DtoMapper.reviewResultsToResponse(reviewService.getReviewsForBook(PageRequest.of(page, size), id));
-    }
-
-    @PostMapping("/{id}/review")
-    public void addReview(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                          @PathVariable String id,
-                          @RequestBody ReviewRequest request) {
-        reviewService.createReview(DtoMapper.requestToMessage(userInfo.getUserId(), id, request));
+        return DtoMapper.bookResultToResponse(bookService.getBook(id));
     }
 
     @PostMapping("/find")

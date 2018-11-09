@@ -2,6 +2,7 @@ package hu.bme.szarch.ibdb.service;
 
 import hu.bme.szarch.ibdb.domain.Role;
 import hu.bme.szarch.ibdb.domain.User;
+import hu.bme.szarch.ibdb.error.Error;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.UserRepository;
@@ -45,7 +46,11 @@ public class AuthenticationService extends TokenGenerator {
         Optional<User> foundUser = userRepository.findByEmail(message.getEmail());
 
         if(foundUser.isPresent()) {
-            throw new ServerException(Errors.INVALID_REGISTRATION);
+            throw new ServerException(Errors.EMAIL_ALREADY_REGISTERED);
+        }
+
+        if(!message.getPassword().equals(message.getConfirmPassword())) {
+            throw new ServerException(Errors.DIFFERENT_PASSWORDS);
         }
 
         User user = new User();

@@ -9,9 +9,9 @@ import hu.bme.szarch.ibdb.repository.BookRepository;
 import hu.bme.szarch.ibdb.repository.CategoryRepository;
 import hu.bme.szarch.ibdb.repository.UserRepository;
 import hu.bme.szarch.ibdb.service.dto.user.FavouriteMessage;
-import hu.bme.szarch.ibdb.service.dto.user.CategoriesUpdateMessage;
+import hu.bme.szarch.ibdb.service.dto.user.UpdateUserCategoriesMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
-import hu.bme.szarch.ibdb.service.dto.user.UserUpdateMessage;
+import hu.bme.szarch.ibdb.service.dto.user.UpdateUserMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -39,8 +39,10 @@ public class UserService {
 
         return UserInfoResult.builder()
                 .id(user.getId())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .enabled(user.isEnabled())
                 .build();
     }
 
@@ -50,17 +52,19 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserInfoResult updateUser(UserUpdateMessage message) {
+    public UserInfoResult updateUser(UpdateUserMessage message) {
         User user = findUserById(message.getId());
 
         user.setEmail(message.getEmail());
         user.setDateOfBirth(message.getDateOfBirth());
+        user.setNickname(message.getNickname());
 
         userRepository.save(user);
 
         return UserInfoResult.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .nickname(user.getNickname())
                 .role(user.getRole())
                 .dateOfBirth(user.getDateOfBirth())
                 .build();
@@ -74,7 +78,7 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    public void updateCategories(CategoriesUpdateMessage message) {
+    public void updateCategories(UpdateUserCategoriesMessage message) {
         List<Category> categories = categoryRepository.findAllByIdIn(new HashSet<>(message.getCategoryIds()));
 
         User user = findUserById(message.getUserId());

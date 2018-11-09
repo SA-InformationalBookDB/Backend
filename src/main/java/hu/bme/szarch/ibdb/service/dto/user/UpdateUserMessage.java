@@ -10,12 +10,14 @@ import java.time.OffsetDateTime;
 @Builder
 @Setter
 @Getter
-public class UserUpdateMessage {
+public class UpdateUserMessage {
 
     private String id;
 
     private String email;
 
     private OffsetDateTime dateOfBirth;
+
+    private String nickname;
 
 }

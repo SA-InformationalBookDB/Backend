@@ -1,5 +1,6 @@
 package hu.bme.szarch.ibdb.service.dto.review;
 
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +8,10 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class ReviewMessage {
+public class UpdateReviewMessage {
 
     private String userId;
-    private String bookId;
+    private String reviewId;
     private int points;
     private String comment;
 

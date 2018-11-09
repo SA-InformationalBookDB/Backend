@@ -59,24 +59,28 @@ public class AuthenticationFilter extends GenericFilterBean {
         String accessToken = request.getHeader("Authorization");
 
         if(accessToken == null) {
-            response.sendError(401);
+            response.sendError(401, "NO_AUTHORIZATION_TOKEN_PROVIDED");
             return true;
         }
 
         Optional<String> userId = tokenService.getUserIdByAccessToken(accessToken);
 
         if(!userId.isPresent()) {
-            response.sendError(401);
+            response.sendError(401, "USER_NOT_FOUND");
             return true;
         }
 
         UserInfoResult userResult = userService.getUserInfo(userId.get());
 
+        if(!userResult.isEnabled()) {
+            response.sendError(403, "FORBIDDEN_USER");
+        }
+
         if(isAdminEndpoint(request.getRequestURI()) && !userResult.getRole().equals(Role.ADMIN)) {
-            response.sendError(401);
+            response.sendError(401, "NO_ADMIN_PERMISSIONS");
             return true;
         } else if(!userResult.getRole().equals(Role.USER) && !userResult.getRole().equals(Role.ADMIN)) {
-            response.sendError(401);
+            response.sendError(401, "NO_PERMISSIONS");
             return true;
         }
 
