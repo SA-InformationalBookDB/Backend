@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
@@ -37,7 +39,7 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     public void updateReview(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
                              @PathVariable String reviewId,
-                             @RequestBody ReviewRequest reviewRequest) {
+                             @RequestBody @Valid ReviewRequest reviewRequest) {
         reviewService.updateReview(DtoMapper.updateReviewRequestToMessage(userInfo.getUserId(), reviewId, reviewRequest));
     }
 
@@ -51,7 +53,7 @@ public class ReviewController {
     @PostMapping("/book/{id}")
     public void addReview(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
                           @PathVariable String id,
-                          @RequestBody ReviewRequest request) {
+                          @RequestBody @Valid ReviewRequest request) {
         reviewService.createReview(DtoMapper.createReviewRequestToMessage(userInfo.getUserId(), id, request));
     }
 

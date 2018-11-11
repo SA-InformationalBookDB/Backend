@@ -6,6 +6,8 @@ import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
 import hu.bme.szarch.ibdb.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/admin/book")
 public class AdminBookController {
@@ -17,7 +19,7 @@ public class AdminBookController {
     }
 
     @PostMapping
-    public BookResponse addBook(@RequestBody BookRequest request) {
+    public BookResponse addBook(@RequestBody @Valid BookRequest request) {
         return DtoMapper.bookResultToResponse(bookService.addBook(DtoMapper.createBookRequestToMessage(request)));
     }
 
@@ -27,7 +29,7 @@ public class AdminBookController {
     }
 
     @PutMapping("/{id}")
-    public BookResponse updateBook(@PathVariable("id") String bookId, @RequestBody BookRequest request) {
+    public BookResponse updateBook(@PathVariable("id") String bookId, @RequestBody @Valid BookRequest request) {
         return DtoMapper.bookResultToResponse(bookService.updateBook(DtoMapper.updateBookRequestToMessage(bookId, request)));
     }
 

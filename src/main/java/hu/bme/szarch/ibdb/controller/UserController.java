@@ -10,6 +10,7 @@ import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -42,7 +43,7 @@ public class UserController {
 
     @PutMapping("/category")
     public void updateCategories(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                                 @RequestBody CategoriesUpdateRequest request) {
+                                 @RequestBody @Valid CategoriesUpdateRequest request) {
         userService.updateCategories(DtoMapper.categoriesRequestToMessage(userInfo.getUserId(), request));
     }
 
