@@ -39,7 +39,7 @@ public class AuthorizationCodeService extends TokenGenerator {
     public String consumeAuthorizationCode(String code, String clientId, String redirectUri) {
         Optional<AuthorizationCode> authorizationCode = authorizationCodeRepository.findByCodeAndClientIdAndRedirectUri(code, clientId, redirectUri);
 
-        System.out.println(authorizationCode.isPresent());
+        System.out.println("|"+code+"|");
 
         if(!authorizationCode.isPresent() || authorizationCode.get().getExpirationDate().isBefore(OffsetDateTime.now())) {
             throw new ServerException(Errors.INVALID_AUTHORIZATION_CODE);
