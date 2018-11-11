@@ -16,7 +16,7 @@ ibdb:
   parameters:
     default-page-size: 10
   security:
-    non-filtered-prefixes: /oauth, /swagger, /webjars
+    non-filtered-prefixes: /oauth, /swagger, /webjars, /public
     oauth2:
       client-id: 73281642736
       access-token-expiration-in: 5
