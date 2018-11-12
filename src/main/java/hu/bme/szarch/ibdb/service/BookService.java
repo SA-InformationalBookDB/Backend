@@ -9,14 +9,14 @@ import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
 import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -30,27 +30,38 @@ public class BookService {
         this.userService = userService;
     }
 
-    public Page<BookResult> getPopulars(Pageable pageable) {
-        return bookRepository.findAllByOrderByViewsDesc(pageable).map(this::bookToResult);
+    public List<BookResult> getPopulars() {
+        return bookRepository.findAllByOrderByViewsDesc().stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
-    public Page<BookResult> getBestSellers(Pageable pageable) {
-        return bookRepository.findAllByOrderBySoldDesc(pageable).map(this::bookToResult);
+    public List<BookResult> getTopPopulars() {
+        return bookRepository.findAllByOrderByViewsDesc(PageRequest.of(0, 10)).map(this::bookToResult).getContent();
     }
 
-    public Page<BookResult> getTrending(Pageable pageable, OffsetDateTime publishedAfter) {
-        return bookRepository.findAllByPublishedAfterOrderByViewsDesc(pageable, publishedAfter).map(this::bookToResult);
+    public List<BookResult> getBestSellers() {
+        return bookRepository.findAllByOrderBySoldDesc().stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
-    public Page<BookResult> findOffered(OfferedBookQuery query) {
+    public List<BookResult> getTopBestSellers() {
+        return bookRepository.findAllByOrderBySoldDesc(PageRequest.of(0, 10)).map(this::bookToResult).getContent();
+    }
+
+    public List<BookResult> getTrending(OffsetDateTime publishedAfter) {
+        return bookRepository.findAllByPublishedAfterOrderByViewsDesc(publishedAfter).stream().map(this::bookToResult).collect(Collectors.toList());
+    }
+
+    public List<BookResult> getTopTrending(OffsetDateTime publishedAfter) {
+        return bookRepository.findAllByPublishedAfterOrderByViewsDesc(PageRequest.of(0, 10), publishedAfter).map(this::bookToResult).getContent();
+    }
+
+    public List<BookResult> findOffered(OfferedBookQuery query) {
         List<Category> categories = userService.getCategoriesForUser(query.getUserId());
 
         return bookRepository.findAllByPublishedAfterAndCategoriesContainsAndAuthorInOrderByViewsDesc(
-                query.getPageable(),
                 query.getPublishedAfter(),
                 new HashSet<>(categories),
                 new HashSet<>(query.getAuthors())
-        ).map(this::bookToResult);
+        ).stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
     public BookResult getBook(String id) {
@@ -59,8 +70,8 @@ public class BookService {
         return bookToResult(book);
     }
 
-    public Page<BookResult> findByTitle(Pageable pageable, String queryString) {
-        return bookRepository.findAllByTitleContains(pageable, queryString).map(this::bookToResult);
+    public List<BookResult> findByTitle(String queryString) {
+        return bookRepository.findAllByTitleContains(queryString).stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
     public BookResult addBook(CreateBookMessage message) {

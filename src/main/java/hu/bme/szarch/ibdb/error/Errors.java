@@ -12,5 +12,6 @@ public class Errors {
     public static final Error UNABLE_TO_LOUGOUT = new Error("UNABLE_TO_LOUGOUT", 8);
     public static final Error INVALID_CLIENT_ID = new Error("INVALID_CLIENT_ID", 9);
     public static final Error DIFFERENT_PASSWORDS = new Error("DIFFERENT_PASSWORDS", 10);
+    public static final Error INVALID_SESSION = new Error("INVALID_SESSION", 11);
 
 }

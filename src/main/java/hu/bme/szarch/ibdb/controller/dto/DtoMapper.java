@@ -1,30 +1,33 @@
 package hu.bme.szarch.ibdb.controller.dto;
 
-import hu.bme.szarch.ibdb.controller.dto.book.*;
+import hu.bme.szarch.ibdb.controller.dto.book.BookRequest;
+import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
 import hu.bme.szarch.ibdb.controller.dto.oauth.*;
 import hu.bme.szarch.ibdb.controller.dto.review.ReviewRequest;
 import hu.bme.szarch.ibdb.controller.dto.review.ReviewResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoryResponse;
-import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.UpdateUserRequest;
+import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.RegistrationResult;
-import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
-import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
+import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
+import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
 import hu.bme.szarch.ibdb.service.dto.review.CreateReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewResult;
 import hu.bme.szarch.ibdb.service.dto.review.UpdateReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.token.AccessTokenResult;
 import hu.bme.szarch.ibdb.service.dto.user.FavouriteMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserCategoriesMessage;
-import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserMessage;
-import org.springframework.data.domain.Page;
+import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DtoMapper {
 
@@ -66,8 +69,8 @@ public class DtoMapper {
                 .build();
     }
 
-    public static Page<BookResponse> bookResultsToResponse(Page<BookResult> results) {
-        return results.map(DtoMapper::bookResultToResponse);
+    public static List<BookResponse> bookResultsToResponse(List<BookResult> results) {
+        return results.stream().map(DtoMapper::bookResultToResponse).collect(Collectors.toList());
     }
 
     public static BookResponse bookResultToResponse(BookResult result) {
@@ -95,8 +98,8 @@ public class DtoMapper {
                 .build();
     }
 
-    public static Page<ReviewResponse> reviewResultsToResponse(Page<ReviewResult> result) {
-        return result.map(DtoMapper::reviewResultToResponse);
+    public static List<ReviewResponse> reviewResultsToResponse(List<ReviewResult> result) {
+        return result.stream().map(DtoMapper::reviewResultToResponse).collect(Collectors.toList());
     }
 
     public static CreateReviewMessage createReviewRequestToMessage(String userId, String bookId, ReviewRequest request) {

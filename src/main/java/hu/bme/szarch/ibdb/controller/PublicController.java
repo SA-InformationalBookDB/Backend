@@ -3,8 +3,6 @@ package hu.bme.szarch.ibdb.controller;
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
 import hu.bme.szarch.ibdb.service.BookService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +22,17 @@ public class PublicController {
 
     @GetMapping("/book/popular")
     public List<BookResponse> getPopularBooks() {
-        return DtoMapper.bookResultsToResponse(bookService.getPopulars(PageRequest.of(0, 10))).getContent();
+        return DtoMapper.bookResultsToResponse(bookService.getTopPopulars());
     }
 
     @GetMapping("/book/bestseller")
-    public Page<BookResponse> getBestSellerBooks() {
-        return DtoMapper.bookResultsToResponse(bookService.getBestSellers(PageRequest.of(0, 10)));
+    public List<BookResponse> getBestSellerBooks() {
+        return DtoMapper.bookResultsToResponse(bookService.getTopBestSellers());
     }
 
     @GetMapping("/book/trending")
-    public Page<BookResponse> getTrendingBooks() {
-        return DtoMapper.bookResultsToResponse(bookService.getTrending(PageRequest.of(0, 10), OffsetDateTime.now().minusMonths(3)));
+    public List<BookResponse> getTrendingBooks() {
+        return DtoMapper.bookResultsToResponse(bookService.getTrending(OffsetDateTime.now().minusMonths(3)));
     }
 
 }

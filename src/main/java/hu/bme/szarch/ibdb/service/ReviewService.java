@@ -11,12 +11,12 @@ import hu.bme.szarch.ibdb.repository.UserRepository;
 import hu.bme.szarch.ibdb.service.dto.review.CreateReviewMessage;
 import hu.bme.szarch.ibdb.service.dto.review.ReviewResult;
 import hu.bme.szarch.ibdb.service.dto.review.UpdateReviewMessage;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -33,12 +33,12 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    public Page<ReviewResult> getReviewsForBook(Pageable pageable, String bookId) {
-        return reviewRepository.findAllByBook_Id(pageable, bookId).map(this::reviewToResult);
+    public List<ReviewResult> getReviewsForBook(String bookId) {
+        return reviewRepository.findAllByBook_Id(bookId).stream().map(this::reviewToResult).collect(Collectors.toList());
     }
 
-    public Page<ReviewResult> getReviewsForUser(Pageable pageable, String userId) {
-        return reviewRepository.findAllByUser_Id(pageable, userId).map(this::reviewToResult);
+    public List<ReviewResult> getReviewsForUser(String userId) {
+        return reviewRepository.findAllByUser_Id(userId).stream().map(this::reviewToResult).collect(Collectors.toList());
     }
 
     public void createReview(CreateReviewMessage message) {

@@ -2,11 +2,9 @@ package hu.bme.szarch.ibdb.controller;
 
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
-import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.UpdateUserRequest;
+import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.domain.Book;
-import hu.bme.szarch.ibdb.filter.AuthenticationFilter;
-import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends WebBase {
 
     private UserService userService;
 
@@ -26,42 +24,38 @@ public class UserController {
 
 
     @PutMapping("/profile")
-    public UserInfoResponse updateUser(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                                       @RequestBody UpdateUserRequest request) {
-        return DtoMapper.userInfoResultToResponse(userService.updateUser(DtoMapper.updateUserRequestToMessage(userInfo.getUserId(), request)));
+    public UserInfoResponse updateUser(@RequestBody UpdateUserRequest request) {
+        return DtoMapper.userInfoResultToResponse(userService.updateUser(DtoMapper.updateUserRequestToMessage(getUserInfo().getUserId(), request)));
     }
 
     @GetMapping("/profile")
-    public UserInfoResponse getUser(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo) {
-        return DtoMapper.userInfoResultToResponse(userService.getUserInfo(userInfo.getUserId()));
+    public UserInfoResponse getUser() {
+        return DtoMapper.userInfoResultToResponse(userService.getUserInfo(getUserInfo().getUserId()));
     }
 
     @DeleteMapping("/profile")
-    public void remove(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo) {
-        userService.deleteUser(userInfo.getUserId());
+    public void remove() {
+        userService.deleteUser(getUserInfo().getUserId());
     }
 
     @PutMapping("/category")
-    public void updateCategories(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                                 @RequestBody @Valid CategoriesUpdateRequest request) {
-        userService.updateCategories(DtoMapper.categoriesRequestToMessage(userInfo.getUserId(), request));
+    public void updateCategories(@RequestBody @Valid CategoriesUpdateRequest request) {
+        userService.updateCategories(DtoMapper.categoriesRequestToMessage(getUserInfo().getUserId(), request));
     }
 
     @PutMapping("/favourite/{id}")
-    public void addFavourite(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                             @PathVariable("id") String bookId) {
-        userService.addFavourite(DtoMapper.favouriteRequestToMessage(userInfo.getUserId(), bookId));
+    public void addFavourite(@PathVariable("id") String bookId) {
+        userService.addFavourite(DtoMapper.favouriteRequestToMessage(getUserInfo().getUserId(), bookId));
     }
 
     @DeleteMapping("/favourite/{id}")
-    public void removeFavourite(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo,
-                                @PathVariable("id") String bookId) {
-        userService.removeFavourite(DtoMapper.favouriteRequestToMessage(userInfo.getUserId(), bookId));
+    public void removeFavourite(@PathVariable("id") String bookId) {
+        userService.removeFavourite(DtoMapper.favouriteRequestToMessage(getUserInfo().getUserId(), bookId));
     }
 
     @GetMapping("/favourite")
-    public List<Book> getFavourites(@SessionAttribute(AuthenticationFilter.userInfoAttribute) UserInfo userInfo) {
-        return userService.getFavourites(userInfo.getUserId());
+    public List<Book> getFavourites() {
+        return userService.getFavourites(getUserInfo().getUserId());
     }
 
 }
