@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/public")
@@ -22,8 +23,8 @@ public class PublicController {
     }
 
     @GetMapping("/popular")
-    public Page<BookResponse> getPopularBooks() {
-        return DtoMapper.bookResultsToResponse(bookService.getPopulars(PageRequest.of(0, 10)));
+    public List<BookResponse> getPopularBooks() {
+        return DtoMapper.bookResultsToResponse(bookService.getPopulars(PageRequest.of(0, 10))).getContent();
     }
 
     @GetMapping("/bestseller")
