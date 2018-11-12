@@ -22,17 +22,17 @@ public class PublicController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/book/popular")
     public List<BookResponse> getPopularBooks() {
         return DtoMapper.bookResultsToResponse(bookService.getPopulars(PageRequest.of(0, 10))).getContent();
     }
 
-    @GetMapping("/bestseller")
+    @GetMapping("/book/bestseller")
     public Page<BookResponse> getBestSellerBooks() {
         return DtoMapper.bookResultsToResponse(bookService.getBestSellers(PageRequest.of(0, 10)));
     }
 
-    @GetMapping("/trending")
+    @GetMapping("/book/trending")
     public Page<BookResponse> getTrendingBooks() {
         return DtoMapper.bookResultsToResponse(bookService.getTrending(PageRequest.of(0, 10), OffsetDateTime.now().minusMonths(3)));
     }
