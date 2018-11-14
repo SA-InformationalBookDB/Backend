@@ -9,6 +9,7 @@ import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
 import hu.bme.szarch.ibdb.service.dto.book.UpdateBookMessage;
+import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -140,6 +141,14 @@ public class BookService {
                 .title(book.getTitle())
                 .views(book.getViews())
                 .averageRating(book.getAverageRating())
+                .categories(book.getCategories().stream().map(this::categoryEntityToResult).collect(Collectors.toList()))
+                .build();
+    }
+
+    public CategoryResult categoryEntityToResult(Category category) {
+        return CategoryResult.builder()
+                .id(category.getId())
+                .name(category.getName())
                 .build();
     }
 

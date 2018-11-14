@@ -1,10 +1,12 @@
 package hu.bme.szarch.ibdb.service.dto.book;
 
+import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -32,5 +34,7 @@ public class BookResult {
     private int views;
 
     private double averageRating;
+
+    private List<CategoryResult> categories;
 
 }

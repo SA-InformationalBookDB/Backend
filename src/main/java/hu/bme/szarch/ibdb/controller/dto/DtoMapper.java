@@ -86,6 +86,7 @@ public class DtoMapper {
                 .title(result.getTitle())
                 .views(result.getViews())
                 .averageRating(result.getAverageRating())
+                .categories(result.getCategories().stream().map(DtoMapper::categoryResultToResponse).collect(Collectors.toList()))
                 .build();
     }
 

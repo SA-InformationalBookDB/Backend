@@ -1,8 +1,10 @@
 package hu.bme.szarch.ibdb.controller.dto.book;
 
+import hu.bme.szarch.ibdb.controller.dto.user.CategoryResponse;
 import lombok.*;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +24,6 @@ public class BookResponse {
     private int sold;
     private int views;
     private double averageRating;
+    private List<CategoryResponse> categories;
 
 }
