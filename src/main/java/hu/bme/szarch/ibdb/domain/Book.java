@@ -38,8 +38,6 @@ public class Book {
 
     private String imageUrl;
 
-    @Basic(fetch = FetchType.LAZY)
-    @Column
     @Lob
     private String summary;
 
