@@ -1,14 +1,14 @@
 package hu.bme.szarch.ibdb.controller.dto.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateUserRequest {
 
     private String email;

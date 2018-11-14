@@ -1,6 +1,8 @@
 package hu.bme.szarch.ibdb.controller.dto.review;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Max;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReviewRequest {
 
     @Min(value = 1, message = "Points should not be less than 1")
