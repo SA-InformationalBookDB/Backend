@@ -37,8 +37,7 @@ public class Book {
     private List<Category> categories;
 
     private String imageUrl;
-
-    @Lob
+    
     private String summary;
 
     private int pageNumber;
