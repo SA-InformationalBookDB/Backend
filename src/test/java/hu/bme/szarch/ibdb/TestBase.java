@@ -73,7 +73,6 @@ public class TestBase {
                 .sold(serialNumber)
                 .summary("summary_"+serialNumber)
                 .title("title_"+serialNumber)
-                .views(serialNumber)
                 .build();
 
         serialNumber++;
