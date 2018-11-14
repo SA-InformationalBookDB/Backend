@@ -131,7 +131,6 @@ public class DtoMapper {
                 .sold(request.getSold())
                 .summary(request.getSummary())
                 .title(request.getTitle())
-                .views(request.getViews())
                 .build();
     }
 
@@ -146,7 +145,6 @@ public class DtoMapper {
                 .sold(request.getSold())
                 .summary(request.getSummary())
                 .title(request.getTitle())
-                .views(request.getViews())
                 .build();
     }
 

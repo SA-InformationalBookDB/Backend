@@ -32,6 +32,4 @@ public class BookRequest {
 
     private int sold;
 
-    private int views;
-
 }

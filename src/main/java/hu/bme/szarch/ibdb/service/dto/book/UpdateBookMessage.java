@@ -29,6 +29,4 @@ public class UpdateBookMessage {
 
     private int sold;
 
-    private int views;
-
 }

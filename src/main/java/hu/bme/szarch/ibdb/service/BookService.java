@@ -68,6 +68,10 @@ public class BookService {
     public BookResult getBook(String id) {
         Book book = findBookById(id);
 
+        book.setViews(book.getViews() + 1);
+
+        bookRepository.save(book);
+
         return bookToResult(book);
     }
 
@@ -111,8 +115,6 @@ public class BookService {
         book.setSold(message.getSold());
         book.setSummary(message.getSummary());
         book.setTitle(message.getTitle());
-        book.setViews(message.getViews());
-
         bookRepository.save(book);
 
         return bookToResult(book);
