@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,60 +41,47 @@ public class ReviewService {
     }
 
     public void createReview(CreateReviewMessage message) {
-        Optional<Book> book = bookRepository.findById(message.getBookId());
-        Optional<User> user = userRepository.findById(message.getUserId());
-
-        if(!book.isPresent() || !user.isPresent()) {
-            throw new ServerException(Errors.NOT_FOUND);
-        }
+        Book book = bookRepository.findById(message.getBookId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
+        User user = userRepository.findById(message.getUserId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
 
         Review review = new Review();
 
-        review.setUser(user.get());
-        review.setBook(book.get());
+        review.setUser(user);
+        review.setBook(book);
         review.setComment(message.getComment());
         review.setDate(OffsetDateTime.now());
         review.setPoints(message.getPoints());
 
-        countAverageResultForBook(book.get(), message.getPoints());
+        setAverageResultForBook(book, message.getPoints());
 
+        bookRepository.save(book);
         reviewRepository.save(review);
     }
 
     public void updateReview(UpdateReviewMessage message) {
-        Optional<Review> review = reviewRepository.findById(message.getReviewId());
+        Review review = reviewRepository.findById(message.getReviewId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
 
-        if(!review.isPresent()) {
-            throw new ServerException(Errors.NOT_FOUND);
-        }
-
-        if(!review.get().getUser().getId().equals(message.getUserId())) {
+        if (!review.getUser().getId().equals(message.getUserId())) {
             throw new ServerException(Errors.BAD_REQUEST);
         }
 
-        review.get().setComment(message.getComment());
-        review.get().setPoints(message.getPoints());
+        review.setComment(message.getComment());
+        review.setPoints(message.getPoints());
 
-        reviewRepository.save(review.get());
+        reviewRepository.save(review);
     }
 
     public void deleteReview(String userId, String reviewId) {
-        Optional<Review> review = reviewRepository.findByIdAndUser_Id(reviewId, userId);
-
-        if(!review.isPresent()) {
-            throw new ServerException(Errors.NOT_FOUND);
-        }
-
-        reviewRepository.delete(review.get());
+        reviewRepository.delete(reviewRepository.findByIdAndUser_Id(reviewId, userId).orElseThrow(() -> new ServerException(Errors.NOT_FOUND)));
     }
 
-    private void countAverageResultForBook(Book book, int newRating) {
-        double ratingSum = book.getReviews().stream().mapToInt(Review::getPoints).sum();
+    private void setAverageResultForBook(Book book, int newRating) {
+        if(book.getReviews().size() == 0) return;
+
+        float ratingSum = book.getReviews().stream().mapToInt(Review::getPoints).sum();
         ratingSum += newRating;
 
-        book.setAverageRating(ratingSum/book.getReviews().size());
-
-        bookRepository.save(book);
+        book.setAverageRating(ratingSum / book.getReviews().size());
     }
 
     private ReviewResult reviewToResult(Review review) {
@@ -104,6 +90,8 @@ public class ReviewService {
                 .comment(review.getComment())
                 .date(review.getDate())
                 .points(review.getPoints())
+                .bookId(review.getBook().getId())
+                .userNickname(review.getUser().getNickname())
                 .build();
     }
 

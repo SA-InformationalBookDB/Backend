@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,5 +32,7 @@ public class BookRequest {
     private int pageNumber;
 
     private int sold;
+
+    private List<String> categoryIds;
 
 }

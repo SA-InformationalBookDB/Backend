@@ -5,6 +5,7 @@ import hu.bme.szarch.ibdb.domain.Category;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.BookRepository;
+import hu.bme.szarch.ibdb.repository.CategoryRepository;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
@@ -16,18 +17,25 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 public class BookService {
 
     private BookRepository bookRepository;
+    private CategoryRepository categoryRepository;
     private UserService userService;
 
     public BookService(BookRepository bookRepository,
+                       CategoryRepository categoryRepository,
                        UserService userService) {
         this.bookRepository = bookRepository;
+        this.categoryRepository = categoryRepository;
         this.userService = userService;
     }
 
@@ -82,6 +90,8 @@ public class BookService {
     public BookResult addBook(CreateBookMessage message) {
         Book book = new Book();
 
+        List<Category> categories = categoryRepository.findAllByIdIn(new HashSet<>(message.getCategoryIds()));
+
         book.setAuthor(message.getAuthor());
         book.setImageUrl(message.getImageUrl());
         book.setPageNumber(message.getPageNumber());
@@ -91,6 +101,7 @@ public class BookService {
         book.setSummary(message.getSummary());
         book.setTitle(message.getTitle());
         book.setViews(message.getViews());
+        book.setCategories(categories);
 
         Book createdBook = bookRepository.save(book);
 
@@ -107,6 +118,9 @@ public class BookService {
     public BookResult updateBook(UpdateBookMessage message) {
         Book book = findBookById(message.getId());
 
+        List<Category> categories = categoryRepository.findAllByIdIn(new HashSet<>(message.getCategoryIds()));
+        categories.addAll(book.getCategories());
+
         book.setAuthor(message.getAuthor());
         book.setImageUrl(message.getImageUrl());
         book.setPageNumber(message.getPageNumber());
@@ -115,6 +129,8 @@ public class BookService {
         book.setSold(message.getSold());
         book.setSummary(message.getSummary());
         book.setTitle(message.getTitle());
+        book.setCategories(categories.stream().filter(distinctByKey(Category::getId)).collect(Collectors.toList()));
+
         bookRepository.save(book);
 
         return bookToResult(book);
@@ -147,11 +163,16 @@ public class BookService {
                 .build();
     }
 
-    public CategoryResult categoryEntityToResult(Category category) {
+    private CategoryResult categoryEntityToResult(Category category) {
         return CategoryResult.builder()
                 .id(category.getId())
                 .name(category.getName())
                 .build();
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
 }

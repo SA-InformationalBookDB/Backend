@@ -96,6 +96,8 @@ public class DtoMapper {
                 .comment(result.getComment())
                 .date(result.getDate())
                 .points(result.getPoints())
+                .bookId(result.getBookId())
+                .userNickname(result.getUserNickname())
                 .build();
     }
 
@@ -131,6 +133,7 @@ public class DtoMapper {
                 .sold(request.getSold())
                 .summary(request.getSummary())
                 .title(request.getTitle())
+                .categoryIds(request.getCategoryIds())
                 .build();
     }
 
@@ -145,6 +148,7 @@ public class DtoMapper {
                 .sold(request.getSold())
                 .summary(request.getSummary())
                 .title(request.getTitle())
+                .categoryIds(request.getCategoryIds())
                 .build();
     }
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -28,5 +29,7 @@ public class UpdateBookMessage {
     private int pageNumber;
 
     private int sold;
+
+    private List<String> categoryIds;
 
 }

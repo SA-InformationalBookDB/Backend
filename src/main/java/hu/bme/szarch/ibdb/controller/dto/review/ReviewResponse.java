@@ -13,10 +13,14 @@ public class ReviewResponse {
 
     private String id;
 
+    private String bookId;
+
     private int points;
 
     private OffsetDateTime date;
 
     private String comment;
+
+    private String userNickname;
 
 }

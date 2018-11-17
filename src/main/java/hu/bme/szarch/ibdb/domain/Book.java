@@ -37,7 +37,7 @@ public class Book {
     private List<Category> categories;
 
     private String imageUrl;
-    
+
     private String summary;
 
     private int pageNumber;
@@ -46,6 +46,6 @@ public class Book {
 
     private int views;
 
-    private double averageRating = 0.0;
+    private float averageRating = 1.0f;
 
 }
