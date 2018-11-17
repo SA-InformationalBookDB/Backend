@@ -1,8 +1,12 @@
 package hu.bme.szarch.ibdb.controller;
 
+import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
+import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.service.ReviewService;
 import hu.bme.szarch.ibdb.service.UserService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/user")
@@ -35,6 +39,11 @@ public class AdminUserController {
     public void removeReview(@PathVariable String userId,
                              @PathVariable String reviewId) {
         reviewService.deleteReview(userId, reviewId);
+    }
+
+    @GetMapping
+    public List<UserInfoResponse> getUsers() {
+        return DtoMapper.userInfoResultsToResponses(userService.getUsers());
     }
 
 }

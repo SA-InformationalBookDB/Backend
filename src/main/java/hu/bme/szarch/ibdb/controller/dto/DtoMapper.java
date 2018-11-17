@@ -161,6 +161,10 @@ public class DtoMapper {
                 .build();
     }
 
+    public static List<UserInfoResponse> userInfoResultsToResponses(List<UserInfoResult> results) {
+        return results.stream().map(DtoMapper::userInfoResultToResponse).collect(Collectors.toList());
+    }
+
     public static UserInfoResponse userInfoResultToResponse(UserInfoResult result) {
         return UserInfoResponse.builder()
                 .id(result.getId())

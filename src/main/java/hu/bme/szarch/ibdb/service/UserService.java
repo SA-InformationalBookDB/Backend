@@ -2,6 +2,7 @@ package hu.bme.szarch.ibdb.service;
 
 import hu.bme.szarch.ibdb.domain.Book;
 import hu.bme.szarch.ibdb.domain.Category;
+import hu.bme.szarch.ibdb.domain.Role;
 import hu.bme.szarch.ibdb.domain.User;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
@@ -10,13 +11,12 @@ import hu.bme.szarch.ibdb.repository.CategoryRepository;
 import hu.bme.szarch.ibdb.repository.UserRepository;
 import hu.bme.szarch.ibdb.service.dto.user.FavouriteMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserCategoriesMessage;
-import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserMessage;
+import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +32,10 @@ public class UserService {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.bookRepository = bookRepository;
+    }
+
+    public List<UserInfoResult> getUsers() {
+        return userRepository.findAll().stream().filter(user -> !user.getRole().equals(Role.ADMIN)).map(this::userToUserInfoResult).collect(Collectors.toList());
     }
 
     public UserInfoResult getUserInfo(String id) {
@@ -61,13 +65,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return UserInfoResult.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .role(user.getRole())
-                .dateOfBirth(user.getDateOfBirth())
-                .build();
+        return userToUserInfoResult(user);
     }
 
     public void enableOrDisableUser(String userId, boolean isEnabled) {
@@ -120,24 +118,22 @@ public class UserService {
     }
 
 
-    public User findUserById(String userId) {
-        Optional<User> user = this.userRepository.findById(userId);
-
-        if(!user.isPresent()) {
-            throw new ServerException(Errors.NOT_FOUND);
-        }
-
-        return user.get();
+    private User findUserById(String userId) {
+        return this.userRepository.findById(userId).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
     }
 
-    public Book findBookById(String bookId) {
-        Optional<Book> book = bookRepository.findById(bookId);
+    private Book findBookById(String bookId) {
+        return bookRepository.findById(bookId).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
+    }
 
-        if(!book.isPresent()) {
-            throw new ServerException(Errors.NOT_FOUND);
-        }
-
-        return book.get();
+    private UserInfoResult userToUserInfoResult(User user) {
+        return UserInfoResult.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .role(user.getRole())
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
     }
 
 }
