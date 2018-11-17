@@ -9,6 +9,8 @@ import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.BookRepository;
 import hu.bme.szarch.ibdb.repository.CategoryRepository;
 import hu.bme.szarch.ibdb.repository.UserRepository;
+import hu.bme.szarch.ibdb.service.dto.book.BookResult;
+import hu.bme.szarch.ibdb.service.dto.category.CategoryResult;
 import hu.bme.szarch.ibdb.service.dto.user.FavouriteMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserCategoriesMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserMessage;
@@ -113,8 +115,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<Book> getFavourites(String userId) {
-        return findUserById(userId).getFavourites();
+    public List<BookResult> getFavourites(String userId) {
+        return findUserById(userId).getFavourites().stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
 
@@ -133,6 +135,30 @@ public class UserService {
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .dateOfBirth(user.getDateOfBirth())
+                .build();
+    }
+
+    private BookResult bookToResult(Book book) {
+        return BookResult.builder()
+                .id(book.getId())
+                .averageRating(book.getAverageRating())
+                .views(book.getViews())
+                .title(book.getTitle())
+                .summary(book.getSummary())
+                .sold(book.getSold())
+                .publisher(book.getPublisher())
+                .published(book.getPublished())
+                .pageNumber(book.getPageNumber())
+                .imageUrl(book.getImageUrl())
+                .author(book.getAuthor())
+                .categories(book.getCategories().stream().map(this::categoryToResult).collect(Collectors.toList()))
+                .build();
+    }
+
+    private CategoryResult categoryToResult(Category category) {
+        return CategoryResult.builder()
+                .id(category.getId())
+                .name(category.getName())
                 .build();
     }
 

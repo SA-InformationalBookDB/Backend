@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Builder
 @Getter
@@ -13,7 +12,6 @@ import java.util.List;
 public class OfferedBookQuery {
 
     private OffsetDateTime publishedAfter;
-    private List<String> authors;
     private String userId;
 
 }

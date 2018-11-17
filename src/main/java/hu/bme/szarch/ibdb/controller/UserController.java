@@ -4,8 +4,8 @@ import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.UpdateUserRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
-import hu.bme.szarch.ibdb.domain.Book;
 import hu.bme.szarch.ibdb.service.UserService;
+import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,7 +54,7 @@ public class UserController extends WebBase {
     }
 
     @GetMapping("/favourite")
-    public List<Book> getFavourites() {
+    public List<BookResult> getFavourites() {
         return userService.getFavourites(getUserInfo().getUserId());
     }
 

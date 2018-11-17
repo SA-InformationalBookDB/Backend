@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/oauth")
-public class OAuthController {
+public class OAuthController extends WebBase {
 
     private AuthenticationService authenticationService;
 
@@ -57,8 +57,8 @@ public class OAuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestBody LogoutRequest request) {
-        authenticationService.logout(request.getAccessToken());
+    public void logout(@RequestHeader("Authorization") String accessToken) {
+        authenticationService.logout(accessToken);
     }
 
     @GetMapping("/authorize")

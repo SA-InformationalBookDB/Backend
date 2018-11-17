@@ -62,7 +62,10 @@ public class TokenService extends TokenGenerator {
         return accessToken.map(AccessToken::getUserId);
     }
 
+    @Transactional
     public void deleteToken(String accessToken) {
+        accessTokenRepository.findById(accessToken).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
+        refreshTokenRepository.deleteByAccessToken_Value(accessToken);
         accessTokenRepository.deleteById(accessToken);
     }
 

@@ -65,11 +65,25 @@ public class BookService {
 
     public List<BookResult> findOffered(OfferedBookQuery query) {
         List<Category> categories = userService.getCategoriesForUser(query.getUserId());
+        List<BookResult> books = userService.getFavourites(query.getUserId());
 
-        return bookRepository.findAllByPublishedAfterAndCategoriesContainsAndAuthorInOrderByViewsDesc(
+        List<String> authors = books.stream().map(BookResult::getAuthor).distinct().collect(Collectors.toList());
+
+        if(categories.isEmpty()) {
+            categories = categoryRepository.findAll();
+        }
+
+        if(authors.isEmpty()) {
+            return bookRepository.findAllByPublishedAfterAndCategoriesInOrderByViewsDesc(
+                    query.getPublishedAfter(),
+                    new HashSet<>(categories)
+            ).stream().map(this::bookToResult).collect(Collectors.toList());
+        }
+
+        return bookRepository.findAllByPublishedAfterAndCategoriesInAndAuthorInOrderByViewsDesc(
                 query.getPublishedAfter(),
                 new HashSet<>(categories),
-                new HashSet<>(query.getAuthors())
+                new HashSet<>(authors)
         ).stream().map(this::bookToResult).collect(Collectors.toList());
     }
 

@@ -2,7 +2,6 @@ package hu.bme.szarch.ibdb.controller;
 
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.book.BookResponse;
-import hu.bme.szarch.ibdb.controller.dto.book.OfferBookRequest;
 import hu.bme.szarch.ibdb.service.BookService;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,10 +31,8 @@ public class BookController extends WebBase {
     }
 
     @PostMapping("/offer")
-    public List<BookResponse> getOfferedBooks(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime publishedAfter,
-                                              @RequestBody OfferBookRequest request) {
+    public List<BookResponse> getOfferedBooks(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime publishedAfter) {
         return DtoMapper.bookResultsToResponse(bookService.findOffered(OfferedBookQuery.builder()
-                .authors(request.getAuthors())
                 .publishedAfter(publishedAfter)
                 .userId(getUserInfo().getUserId())
                 .build()

@@ -18,7 +18,9 @@ public interface BookRepository extends CrudRepository<Book, String> {
 
     List<Book> findAllByOrderByViewsDesc();
 
-    List<Book> findAllByPublishedAfterAndCategoriesContainsAndAuthorInOrderByViewsDesc(OffsetDateTime publishedAfter, Set<Category> categories, Set<String> authors);
+    List<Book> findAllByPublishedAfterAndCategoriesInOrderByViewsDesc(OffsetDateTime publishedAfter, Set<Category> categories);
+
+    List<Book> findAllByPublishedAfterAndCategoriesInAndAuthorInOrderByViewsDesc(OffsetDateTime publishedAfter, Set<Category> categories, Set<String> authors);
 
     List<Book> findAllByTitleContains(String queryString);
 

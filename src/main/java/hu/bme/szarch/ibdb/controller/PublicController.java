@@ -32,7 +32,7 @@ public class PublicController {
 
     @GetMapping("/book/trending")
     public List<BookResponse> getTrendingBooks() {
-        return DtoMapper.bookResultsToResponse(bookService.getTrending(OffsetDateTime.now().minusMonths(3)));
+        return DtoMapper.bookResultsToResponse(bookService.getTopTrending(OffsetDateTime.now().minusMonths(3)));
     }
 
 }
