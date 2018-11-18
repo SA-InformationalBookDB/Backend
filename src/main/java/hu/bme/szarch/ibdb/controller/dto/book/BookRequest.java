@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -33,6 +34,6 @@ public class BookRequest {
 
     private int sold;
 
-    private List<String> categoryIds;
+    private List<String> categoryIds = new ArrayList<>();
 
 }

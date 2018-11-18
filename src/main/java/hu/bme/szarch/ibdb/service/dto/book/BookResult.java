@@ -37,4 +37,6 @@ public class BookResult {
 
     private List<CategoryResult> categories;
 
+    private boolean isFavourite;
+
 }

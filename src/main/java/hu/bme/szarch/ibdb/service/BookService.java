@@ -2,10 +2,13 @@ package hu.bme.szarch.ibdb.service;
 
 import hu.bme.szarch.ibdb.domain.Book;
 import hu.bme.szarch.ibdb.domain.Category;
+import hu.bme.szarch.ibdb.domain.User;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
+import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.repository.BookRepository;
 import hu.bme.szarch.ibdb.repository.CategoryRepository;
+import hu.bme.szarch.ibdb.repository.UserRepository;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
 import hu.bme.szarch.ibdb.service.dto.book.CreateBookMessage;
 import hu.bme.szarch.ibdb.service.dto.book.OfferedBookQuery;
@@ -29,14 +32,14 @@ public class BookService {
 
     private BookRepository bookRepository;
     private CategoryRepository categoryRepository;
-    private UserService userService;
+    private UserRepository userRepository;
 
     public BookService(BookRepository bookRepository,
                        CategoryRepository categoryRepository,
-                       UserService userService) {
+                       UserRepository userRepository) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public List<BookResult> getPopulars() {
@@ -64,10 +67,11 @@ public class BookService {
     }
 
     public List<BookResult> findOffered(OfferedBookQuery query) {
-        List<Category> categories = userService.getCategoriesForUser(query.getUserId());
-        List<BookResult> books = userService.getFavourites(query.getUserId());
+        User user = userRepository.findById(query.getUserId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
+        List<Category> categories = user.getCategories();
+        List<Book> books = user.getFavourites();
 
-        List<String> authors = books.stream().map(BookResult::getAuthor).distinct().collect(Collectors.toList());
+        List<String> authors = books.stream().map(Book::getAuthor).distinct().collect(Collectors.toList());
 
         if(categories.isEmpty()) {
             categories = categoryRepository.findAll();
@@ -87,14 +91,21 @@ public class BookService {
         ).stream().map(this::bookToResult).collect(Collectors.toList());
     }
 
-    public BookResult getBook(String id) {
+    public BookResult getBook(UserInfo userInfo, String id) {
         Book book = findBookById(id);
+        User user = userRepository.findById(userInfo.getUserId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
 
         book.setViews(book.getViews() + 1);
 
         bookRepository.save(book);
 
-        return bookToResult(book);
+        BookResult result = bookToResult(book);
+
+        boolean isFavourite = user.getFavourites().stream().anyMatch(favouriteBook -> favouriteBook.getId().equals(result.getId()));
+
+        result.setFavourite(isFavourite);
+
+        return result;
     }
 
     public List<BookResult> findByTitle(String queryString) {

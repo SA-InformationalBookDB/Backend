@@ -46,7 +46,7 @@ public class BookController extends WebBase {
 
     @GetMapping("/{id}")
     public BookResponse getBook(@PathVariable String id) {
-        return DtoMapper.bookResultToResponse(bookService.getBook(id));
+        return DtoMapper.bookResultToResponse(bookService.getBook(getUserInfo(), id));
     }
 
     @PostMapping("/find")

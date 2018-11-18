@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,6 @@ import java.util.List;
 public class CategoriesUpdateRequest {
 
     @NotNull
-    private List<String> categoryIds;
+    private List<String> categoryIds = new ArrayList<>();
 
 }

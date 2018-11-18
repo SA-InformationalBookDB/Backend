@@ -25,5 +25,6 @@ public class BookResponse {
     private int views;
     private double averageRating;
     private List<CategoryResponse> categories;
+    private boolean isFavourite;
 
 }
