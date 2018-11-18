@@ -19,7 +19,7 @@ public class ReviewRequest {
     @Min(value = 1, message = "Points should not be less than 1")
     @Max(value = 5, message = "Points should not be more than 5")
     @NotNull
-    private int points;
+    private float points;
 
     @Size(max = 500, message = "Comments should not be longer than 500 characters")
     private String comment;

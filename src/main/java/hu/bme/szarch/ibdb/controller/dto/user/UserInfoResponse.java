@@ -18,5 +18,6 @@ public class UserInfoResponse {
     private Role role;
     private String nickname;
     private OffsetDateTime birthDate;
+    private boolean enabled;
 
 }

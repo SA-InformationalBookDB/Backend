@@ -2,13 +2,14 @@ package hu.bme.szarch.ibdb.controller;
 
 import hu.bme.szarch.ibdb.controller.dto.DtoMapper;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
-import hu.bme.szarch.ibdb.controller.dto.user.UpdateUserRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.service.UserService;
 import hu.bme.szarch.ibdb.service.dto.book.BookResult;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,9 @@ public class UserController extends WebBase {
 
 
     @PutMapping("/profile")
-    public UserInfoResponse updateUser(@RequestBody UpdateUserRequest request) {
-        return DtoMapper.userInfoResultToResponse(userService.updateUser(DtoMapper.updateUserRequestToMessage(getUserInfo().getUserId(), request)));
+    public UserInfoResponse updateUser(@RequestParam(required = false) String nickname,
+                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime birthDate) {
+        return DtoMapper.userInfoResultToResponse(userService.updateUser(DtoMapper.updateUserRequestToMessage(getUserInfo().getUserId(), nickname, birthDate)));
     }
 
     @GetMapping("/profile")

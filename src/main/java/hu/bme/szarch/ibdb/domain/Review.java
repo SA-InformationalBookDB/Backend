@@ -30,7 +30,7 @@ public class Review {
     @ManyToOne
     private Book book;
 
-    private int points;
+    private float points;
 
     private OffsetDateTime date;
 

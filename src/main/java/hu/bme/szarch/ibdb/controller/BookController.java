@@ -30,7 +30,7 @@ public class BookController extends WebBase {
         return DtoMapper.bookResultsToResponse(bookService.getBestSellers());
     }
 
-    @PostMapping("/offer")
+    @GetMapping("/offer")
     public List<BookResponse> getOfferedBooks(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime publishedAfter) {
         return DtoMapper.bookResultsToResponse(bookService.findOffered(OfferedBookQuery.builder()
                 .publishedAfter(publishedAfter)

@@ -37,7 +37,8 @@ public class ReviewService {
     }
 
     public List<ReviewResult> getReviewsForUser(String userId) {
-        return reviewRepository.findAllByUser_Id(userId).stream().map(this::reviewToResult).collect(Collectors.toList());
+        List<ReviewResult> results = reviewRepository.findAllByUser_Id(userId).stream().map(this::reviewToResult).collect(Collectors.toList());
+        return results;
     }
 
     public void createReview(CreateReviewMessage message) {
@@ -75,10 +76,10 @@ public class ReviewService {
         reviewRepository.delete(reviewRepository.findByIdAndUser_Id(reviewId, userId).orElseThrow(() -> new ServerException(Errors.NOT_FOUND)));
     }
 
-    private void setAverageResultForBook(Book book, int newRating) {
+    private void setAverageResultForBook(Book book, float newRating) {
         if(book.getReviews().size() == 0) return;
 
-        float ratingSum = book.getReviews().stream().mapToInt(Review::getPoints).sum();
+        float ratingSum = (float)book.getReviews().stream().mapToDouble(Review::getPoints).sum();
         ratingSum += newRating;
 
         book.setAverageRating(ratingSum / book.getReviews().size());

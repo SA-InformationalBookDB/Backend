@@ -7,7 +7,6 @@ import hu.bme.szarch.ibdb.controller.dto.review.ReviewRequest;
 import hu.bme.szarch.ibdb.controller.dto.review.ReviewResponse;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoriesUpdateRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.CategoryResponse;
-import hu.bme.szarch.ibdb.controller.dto.user.UpdateUserRequest;
 import hu.bme.szarch.ibdb.controller.dto.user.UserInfoResponse;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginMessage;
 import hu.bme.szarch.ibdb.service.dto.authentication.LoginResult;
@@ -26,6 +25,7 @@ import hu.bme.szarch.ibdb.service.dto.user.UpdateUserCategoriesMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UpdateUserMessage;
 import hu.bme.szarch.ibdb.service.dto.user.UserInfoResult;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -153,12 +153,11 @@ public class DtoMapper {
                 .build();
     }
 
-    public static UpdateUserMessage updateUserRequestToMessage(String userId, UpdateUserRequest request) {
+    public static UpdateUserMessage updateUserRequestToMessage(String userId, String nickname, OffsetDateTime birthDate) {
         return UpdateUserMessage.builder()
                 .id(userId)
-                .nickname(request.getNickname())
-                .dateOfBirth(request.getBirthDate())
-                .email(request.getEmail())
+                .nickname(nickname)
+                .dateOfBirth(birthDate)
                 .build();
     }
 
@@ -170,8 +169,10 @@ public class DtoMapper {
         return UserInfoResponse.builder()
                 .id(result.getId())
                 .birthDate(result.getDateOfBirth())
+                .nickname(result.getNickname())
                 .email(result.getEmail())
                 .role(result.getRole())
+                .enabled(result.isEnabled())
                 .build();
     }
 

@@ -11,7 +11,7 @@ public class CreateReviewMessage {
 
     private String userId;
     private String bookId;
-    private int points;
+    private float points;
     private String comment;
 
 }

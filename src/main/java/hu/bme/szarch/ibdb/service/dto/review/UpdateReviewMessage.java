@@ -12,7 +12,7 @@ public class UpdateReviewMessage {
 
     private String userId;
     private String reviewId;
-    private int points;
+    private float points;
     private String comment;
 
 }

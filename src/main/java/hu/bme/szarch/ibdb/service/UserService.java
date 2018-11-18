@@ -41,15 +41,7 @@ public class UserService {
     }
 
     public UserInfoResult getUserInfo(String id) {
-        User user = findUserById(id);
-
-        return UserInfoResult.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .enabled(user.isEnabled())
-                .build();
+        return userToUserInfoResult(findUserById(id));
     }
 
     public void deleteUser(String userId) {
@@ -61,9 +53,8 @@ public class UserService {
     public UserInfoResult updateUser(UpdateUserMessage message) {
         User user = findUserById(message.getId());
 
-        user.setEmail(message.getEmail());
-        user.setDateOfBirth(message.getDateOfBirth());
-        user.setNickname(message.getNickname());
+        if(message.getDateOfBirth() != null) user.setDateOfBirth(message.getDateOfBirth());
+        if(message.getNickname() != null) user.setNickname(message.getNickname());
 
         userRepository.save(user);
 
@@ -72,6 +63,8 @@ public class UserService {
 
     public void enableOrDisableUser(String userId, boolean isEnabled) {
         User user = findUserById(userId);
+
+        if(user.getRole().equals(Role.ADMIN)) return;
 
         user.setEnabled(isEnabled);
 
@@ -135,6 +128,7 @@ public class UserService {
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .dateOfBirth(user.getDateOfBirth())
+                .enabled(user.isEnabled())
                 .build();
     }
 
