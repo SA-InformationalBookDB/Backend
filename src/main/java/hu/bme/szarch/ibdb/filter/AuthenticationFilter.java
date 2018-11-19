@@ -84,7 +84,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             return true;
         }
 
-        request.getSession().setAttribute(userInfoAttribute, new UserInfo(userId.get()));
+        request.setAttribute(userInfoAttribute, new UserInfo(userId.get()));
         return false;
     }
 

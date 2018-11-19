@@ -7,15 +7,16 @@ import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 public class WebBase {
 
     @Autowired
-    private ObjectFactory<HttpSession> httpSessionFactory;
+    private ObjectFactory<HttpServletRequest> httpRequestFactory;
 
     protected UserInfo getUserInfo() {
-        UserInfo userInfo = (UserInfo)httpSessionFactory.getObject().getAttribute(AuthenticationFilter.userInfoAttribute);
+
+        UserInfo userInfo = (UserInfo) httpRequestFactory.getObject().getAttribute(AuthenticationFilter.userInfoAttribute);
 
         if(userInfo == null) {
             throw new ServerException(Errors.INVALID_SESSION);
