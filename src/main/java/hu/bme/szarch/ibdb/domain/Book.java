@@ -46,6 +46,6 @@ public class Book {
 
     private int views;
 
-    private float averageRating = 1.0f;
+    private float averageRating = 0.0f;
 
 }
