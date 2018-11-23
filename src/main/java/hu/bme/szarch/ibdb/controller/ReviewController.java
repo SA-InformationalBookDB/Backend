@@ -25,7 +25,7 @@ public class ReviewController extends WebBase {
         return DtoMapper.reviewResultsToResponse(reviewService.getReviewsForUser(getUserInfo().getUserId()));
     }
 
-    @DeleteMapping("/{reviewId}}")
+    @DeleteMapping("/{reviewId}")
     public void deleteReview(@PathVariable String reviewId) {
         reviewService.deleteReview(getUserInfo().getUserId(), reviewId);
     }
