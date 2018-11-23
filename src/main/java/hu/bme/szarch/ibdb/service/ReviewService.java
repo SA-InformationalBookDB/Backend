@@ -44,6 +44,7 @@ public class ReviewService {
     public void createReview(CreateReviewMessage message) {
         Book book = bookRepository.findById(message.getBookId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
         User user = userRepository.findById(message.getUserId()).orElseThrow(() -> new ServerException(Errors.NOT_FOUND));
+        List<Review> reviews = reviewRepository.findAllByBook_Id(message.getBookId());
 
         Review review = new Review();
 
@@ -53,7 +54,7 @@ public class ReviewService {
         review.setDate(OffsetDateTime.now());
         review.setPoints(message.getPoints());
 
-        setAverageResultForBook(book, message.getPoints());
+        setAverageResultForBook(book, reviews, message.getPoints());
 
         bookRepository.save(book);
         reviewRepository.save(review);
@@ -76,13 +77,13 @@ public class ReviewService {
         reviewRepository.delete(reviewRepository.findByIdAndUser_Id(reviewId, userId).orElseThrow(() -> new ServerException(Errors.NOT_FOUND)));
     }
 
-    private void setAverageResultForBook(Book book, float newRating) {
-        if(book.getReviews().size() == 0) return;
+    private void setAverageResultForBook(Book book, List<Review> reviews, float newRating) {
+        if(reviews.size() == 0) return;
 
-        float ratingSum = (float)book.getReviews().stream().mapToDouble(Review::getPoints).sum();
+        float ratingSum = (float)reviews.stream().mapToDouble(Review::getPoints).sum();
         ratingSum += newRating;
 
-        book.setAverageRating(ratingSum / book.getReviews().size());
+        book.setAverageRating(ratingSum / (reviews.size()+1));
     }
 
     private ReviewResult reviewToResult(Review review) {
