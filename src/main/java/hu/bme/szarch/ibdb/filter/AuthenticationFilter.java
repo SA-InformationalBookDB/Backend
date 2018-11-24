@@ -1,6 +1,7 @@
 package hu.bme.szarch.ibdb.filter;
 
 import hu.bme.szarch.ibdb.domain.Role;
+import hu.bme.szarch.ibdb.domain.oauth.AccessToken;
 import hu.bme.szarch.ibdb.filter.dto.UserInfo;
 import hu.bme.szarch.ibdb.service.TokenService;
 import hu.bme.szarch.ibdb.service.UserService;
@@ -16,6 +17,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -63,14 +65,14 @@ public class AuthenticationFilter extends GenericFilterBean {
             return true;
         }
 
-        Optional<String> userId = tokenService.getUserIdByAccessToken(accessToken);
+        Optional<AccessToken> accessTokenEntity = tokenService.getUserIdByAccessToken(accessToken);
 
-        if(!userId.isPresent()) {
-            response.sendError(401, "USER_NOT_FOUND");
+        if(!accessTokenEntity.isPresent() || accessTokenEntity.get().getExpirationDate().isBefore(OffsetDateTime.now())) {
+            response.sendError(401, "INVALID_ACCESS_TOKEN");
             return true;
         }
 
-        UserInfoResult userResult = userService.getUserInfo(userId.get());
+        UserInfoResult userResult = userService.getUserInfo(accessTokenEntity.get().getUserId());
 
         if(!userResult.isEnabled()) {
             response.sendError(403, "FORBIDDEN_USER");
@@ -84,7 +86,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             return true;
         }
 
-        request.setAttribute(userInfoAttribute, new UserInfo(userId.get()));
+        request.setAttribute(userInfoAttribute, new UserInfo(accessTokenEntity.get().getUserId()));
         return false;
     }
 

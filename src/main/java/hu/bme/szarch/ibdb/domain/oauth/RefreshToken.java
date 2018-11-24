@@ -20,7 +20,9 @@ public class RefreshToken {
 
     private OffsetDateTime created;
 
-    @OneToOne
+    private String userId;
+
+    @OneToOne(orphanRemoval = true)
     private AccessToken accessToken;
 
     @PrePersist

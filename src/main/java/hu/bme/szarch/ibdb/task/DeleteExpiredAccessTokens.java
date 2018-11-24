@@ -13,7 +13,7 @@ public class DeleteExpiredAccessTokens {
         this.tokenService = tokenService;
     }
 
-    @Scheduled(cron = "0 0/${ibdb.task.token-cleanup-frequency} * * * ?")
+    @Scheduled(cron = "0 0/${ibdb.task.token-cleanup-frequency} * * * *")
     public void deleteAllExpiredTokens() {
         tokenService.deleteExpiredTokens();
     }

@@ -24,7 +24,7 @@ ibdb:
       refresh-token-length: 64
       authorization-code-length: 32
   task:
-    token-cleanup-frequency: 15
+    token-cleanup-frequency: 45
 ---
 spring:
   profiles: mssql
