@@ -15,6 +15,8 @@ public class ReviewResult {
 
     private String bookId;
 
+    private String bookTitle;
+
     private float points;
 
     private OffsetDateTime date;

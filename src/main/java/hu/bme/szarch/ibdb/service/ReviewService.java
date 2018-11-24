@@ -37,8 +37,7 @@ public class ReviewService {
     }
 
     public List<ReviewResult> getReviewsForUser(String userId) {
-        List<ReviewResult> results = reviewRepository.findAllByUser_Id(userId).stream().map(this::reviewToResult).collect(Collectors.toList());
-        return results;
+        return reviewRepository.findAllByUser_Id(userId).stream().map(this::reviewToResult).collect(Collectors.toList());
     }
 
     public void createReview(CreateReviewMessage message) {
@@ -96,7 +95,10 @@ public class ReviewService {
     }
 
     private void setAverageResultForBook(Book book, List<Review> reviews) {
-        if(reviews.size() == 0) return;
+        if(reviews.size() == 0) {
+            book.setAverageRating(0.0f);
+            return;
+        }
 
         float ratingSum = (float)reviews.stream().mapToDouble(Review::getPoints).sum();
 
@@ -110,6 +112,7 @@ public class ReviewService {
                 .date(review.getDate())
                 .points(review.getPoints())
                 .bookId(review.getBook().getId())
+                .bookTitle(review.getBook().getTitle())
                 .userNickname(review.getUser().getNickname())
                 .build();
     }
