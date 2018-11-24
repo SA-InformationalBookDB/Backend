@@ -99,7 +99,7 @@ public class AuthenticationService extends TokenGenerator {
 
         String userId = authorizationCodeService.consumeAuthorizationCode(message.getCode(), message.getClientId(), message.getRedirectUri());
 
-        Optional<User> user = userRepository.findByEmail(userId);
+        Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent() || !user.get().isEnabled()) {
             throw new ServerException(Errors.FORBIDDEN);
