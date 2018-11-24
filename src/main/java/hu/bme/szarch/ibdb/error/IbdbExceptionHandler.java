@@ -20,6 +20,8 @@ public class IbdbExceptionHandler {
             return new ResponseEntity<>(exception.getError(), HttpStatus.NOT_FOUND);
         } else if(exception.getError().getCode() == Errors.UNAUTHORIZED.getCode()) {
             return new ResponseEntity<>(exception.getError(), HttpStatus.UNAUTHORIZED);
+        } else if(exception.getError().getCode() == Errors.FORBIDDEN.getCode()) {
+            return new ResponseEntity<>(exception.getError(), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(exception.getError(), HttpStatus.UNPROCESSABLE_ENTITY);

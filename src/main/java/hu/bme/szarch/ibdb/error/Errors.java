@@ -13,5 +13,6 @@ public class Errors {
     public static final Error INVALID_CLIENT_ID = new Error("INVALID_CLIENT_ID", 9);
     public static final Error DIFFERENT_PASSWORDS = new Error("DIFFERENT_PASSWORDS", 10);
     public static final Error INVALID_SESSION = new Error("INVALID_SESSION", 11);
+    public static final Error FORBIDDEN = new Error("FORBIDDEN", 12);
 
 }

@@ -2,7 +2,6 @@ package hu.bme.szarch.ibdb.service;
 
 import hu.bme.szarch.ibdb.domain.Role;
 import hu.bme.szarch.ibdb.domain.User;
-import hu.bme.szarch.ibdb.error.Error;
 import hu.bme.szarch.ibdb.error.Errors;
 import hu.bme.szarch.ibdb.error.ServerException;
 import hu.bme.szarch.ibdb.repository.UserRepository;
@@ -73,7 +72,11 @@ public class AuthenticationService extends TokenGenerator {
     public LoginResult login(LoginMessage message) {
         Optional<User> user = userRepository.findByEmail(message.getEmail());
 
-        if(!user.isPresent() || !this.passwordEncoder.matches(message.getPassword(), user.get().getPassword())) {
+        if(!user.isPresent() || !user.get().isEnabled()) {
+            throw new ServerException(Errors.FORBIDDEN);
+        }
+
+        if(!this.passwordEncoder.matches(message.getPassword(), user.get().getPassword())) {
             throw new ServerException(Errors.INVALID_LOGIN_EXCEPTION);
         }
 
@@ -95,6 +98,12 @@ public class AuthenticationService extends TokenGenerator {
         }
 
         String userId = authorizationCodeService.consumeAuthorizationCode(message.getCode(), message.getClientId(), message.getRedirectUri());
+
+        Optional<User> user = userRepository.findByEmail(userId);
+
+        if(!user.isPresent() || !user.get().isEnabled()) {
+            throw new ServerException(Errors.FORBIDDEN);
+        }
 
         return tokenService.createAccessToken(userId);
     }
